@@ -1,0 +1,45 @@
+{
+	"name": "awesome9/framework",
+	"description": "Awesome9 framework",
+	"homepage": "https://awesome9.co/",
+	"version": "1.0.0",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+	"authors": [
+		{
+			"name": "Awesome9",
+			"email": "info@awesome9.co",
+			"homepage": "https://awesome9.co"
+		}
+	],
+	"require": {
+		"php": ">=7.4"
+	},
+	"require-dev": {
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"wp-coding-standards/wpcs": "^3.0.0"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"platform": {
+			"php": "7.4"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"autoload": {
+		"classmap": [
+			"src/"
+		],
+		"files": []
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"composer global require wp-cli/wp-cli"
+		]
+	}
+}
