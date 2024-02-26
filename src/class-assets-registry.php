@@ -23,28 +23,28 @@ abstract class Assets_Registry implements Integration_Interface {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.0.0';
+	public $version = '1.0.0';
 
 	/**
 	 * Prefix to use in handle to make it unique.
 	 *
 	 * @var string
 	 */
-	const PREFIX = 'awesome9';
+	static public $prefix = 'awesome9';
 
 	/**
 	 * Hook to enqueue the assets.
 	 *
 	 * @var string
 	 */
-	const HOOK = 'admin_enqueue_scripts';
+	public $hook = 'admin_enqueue_scripts';
 
 	/**
 	 * Base url
 	 *
 	 * @var string
 	 */
-	const BASE_URL = '';
+	public $base_url = '';
 
 	/**
 	 * Hook into WordPress.
@@ -52,7 +52,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @return void
 	 */
 	public function hooks(): void {
-		add_action( static::HOOK, [ $this, 'registry' ], 0 );
+		add_action( $this->hook, [ $this, 'registry' ], 0 );
 	}
 
 	/**
@@ -92,7 +92,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @return string
 	 */
 	public static function prefix_it( $handle ): string {
-		return self::PREFIX . '-' . $handle;
+		return self::$prefix . '-' . $handle;
 	}
 
 	/**
@@ -106,12 +106,12 @@ abstract class Assets_Registry implements Integration_Interface {
 	 *
 	 * @return void
 	 */
-	private function register_style( $handle, $src, $deps = [], $ver = false, $media = 'all' ) {
+	protected function register_style( $handle, $src, $deps = [], $ver = false, $media = 'all' ) {
 		if ( false === $ver ) {
-			$ver = self::VERSION;
+			$ver = $this->version;
 		}
 
-		wp_register_style( self::prefix_it( $handle ), self::BASE_URL . $src, $deps, $ver, $media );
+		wp_register_style( self::prefix_it( $handle ), $this->base_url . $src, $deps, $ver, $media );
 	}
 
 	/**
@@ -125,11 +125,11 @@ abstract class Assets_Registry implements Integration_Interface {
 	 *
 	 * @return void
 	 */
-	private function register_script( $handle, $src, $deps = [], $ver = false, $in_footer = false ) {
+	protected function register_script( $handle, $src, $deps = [], $ver = false, $in_footer = false ) {
 		if ( false === $ver ) {
-			$ver = self::VERSION;
+			$ver = $this->version;
 		}
 
-		wp_register_script( self::prefix_it( $handle ), self::BASE_URL . $src, $deps, $ver, $in_footer );
+		wp_register_script( self::prefix_it( $handle ), $this->base_url . $src, $deps, $ver, $in_footer );
 	}
 }
