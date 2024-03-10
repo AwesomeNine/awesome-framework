@@ -9,6 +9,8 @@
 
 namespace Awesome9\Framework\Options;
 
+use Awesome9\Framework\Utilities\Params;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -53,35 +55,53 @@ class Option_Page {
 		require_once $this->get_view( 'form' );
 	}
 
-	public function render_tabs() {
-		$tabs = $this->get_tabs();
+	/**
+	 * Render tabs navigantion.
+	 *
+	 * @return void
+	 */
+	public function render_tabs(): void {
+		$tabs       = $this->get_tabs();
+		$active_tab = $this->get_active_tab();
 		?>
-		<div class="nav-tab-wrapper">
+		<div class="awesome9-tab-nav space-y-2">
 			<?php
-			foreach ( $tabs as $slug => $tab ) {
+			foreach ( $tabs as $slug => $tab ) :
+				$active_class = $active_tab === $slug ? 'is-active bg-white text-blue-700' : '';
+				$icon_class = $active_tab === $slug ? ' text-blue-700' : '';
 				?>
-				<a href="#<?php echo esc_attr( $slug ); ?>" class="nav-tab"><?php echo esc_html( $tab['title'] ); ?></a>
+				<div class="awesome9-tab-nav-item">
+					<a href="#<?php echo esc_attr( $slug ); ?>" class="flex items-center text-base no-underline py-2 px-5 rounded-md text-gray-700 <?php echo esc_attr( $active_class ); ?>" data-tab="<?php echo esc_attr( $slug ); ?>">
+						<span class="text-icons mt-0.5 <?php echo esc_attr( $tab['icon'] . $icon_class  ); ?>" area-hidden="true"></span>
+						<span class="ml-3 d-none d-lg-block flex-1">
+							<?php echo esc_html( $tab['title'] ); ?>
+						</span>
+					</a>
+				</div>
 				<?php
-			}
+			endforeach;
 			?>
 		</div>
 		<?php
 	}
 
-	public function render_tab_content() {
-		$tabs = $this->get_tabs();
-		?>
-		<div class="tab-content">
-			<?php
-			foreach ( $tabs as $slug => $tab ) {
-				require $this->get_view( $tab['template'] );
-				?>
+	/**
+	 * Render tab content.
+	 *
+	 * @return void
+	 */
+	public function render_tab_content(): void {
+		$tabs       = $this->get_tabs();
+		$active_tab = $this->get_active_tab();
 
-				<?php
-			}
+		foreach ( $tabs as $slug => $tab ) {
+			$active_class = $active_tab == $slug ? ' is-active' : '';
 			?>
-		</div>
-		<?php
+			<div id="<?php echo esc_attr( $slug ); ?>" class="awesome9-tab-content<?php echo esc_attr( $active_class ); ?>">
+			<?php require $this->get_view( 'blocks/' . $tab['template'] ); ?>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -93,5 +113,15 @@ class Option_Page {
 	 */
 	private function get_view( $template ): string {
 		return __DIR__ . '/views/' . $template . '.php';
+	}
+
+	/**
+	 * Get active tab.
+	 *
+	 * @return string
+	 */
+	private function get_active_tab(): string {
+		$tabs = array_keys( $this->get_tabs() );
+		return Params::get( 'tab_page', current( $tabs ) );
 	}
 }
