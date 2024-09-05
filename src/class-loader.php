@@ -9,7 +9,6 @@
 
 namespace Awesome9\Framework;
 
-use Awesome9\Framework\Utilities\Arr;
 use ReflectionClass;
 
 defined( 'ABSPATH' ) || exit;
@@ -90,49 +89,24 @@ class Loader {
 	}
 
 	/**
-	 * Loads all registered initializers if their conditionals are met.
+	 * Register as.
+	 *
+	 * @param string $register_as Register the container as.
+	 * @param string $class_name  The class name of the registery to be loaded.
+	 * @param string $alias       The class alias.
+	 * @param array  $args        The constructor arguments.
 	 *
 	 * @return void
 	 */
-	protected function load_initializers() {
-		foreach ( $this->initializers as $alias => $class ) {
-			$this->create_container( $class, 'initialize', $alias );
+	private function register( $register_as, $class_name, $alias = '', $args = null ) {
+		if ( ! empty( $args ) ) {
+			$class_name = [ $class_name, $args ];
 		}
-	}
 
-	/**
-	 * Loads all registered integrations if their conditionals are met.
-	 *
-	 * @return void
-	 */
-	public function load_integrations() {
-		foreach ( $this->integrations as $alias => $class ) {
-			$this->create_container( $class, 'hooks', $alias );
-		}
-	}
-
-	/**
-	 * Loads all registered routes if their conditionals are met.
-	 *
-	 * @return void
-	 */
-	public function load_routes() {
-		foreach ( $this->routes as $alias => $class ) {
-			$this->create_container( $class, 'register_routes', $alias );
-		}
-	}
-
-	/**
-	 * Define constant if not already set.
-	 *
-	 * @param string      $name  Constant name.
-	 * @param bool|string $value Constant value.
-	 *
-	 * @return void
-	 */
-	public function define( $name, $value ): void {
-		if ( ! defined( $name ) ) {
-			define( $name, $value );
+		if ( '' === $alias ) {
+			$this->{$register_as}[] = $class_name;
+		} else {
+			$this->{$register_as}[ $alias ] = $class_name;
 		}
 	}
 
@@ -176,27 +150,36 @@ class Loader {
 	}
 
 	/**
-	 * Register as.
-	 *
-	 * @param string $register_as Register the container as.
-	 * @param string $classname   The class name of the registry to be loaded.
-	 * @param string $alias       The class alias.
-	 * @param array  $args        The constructor arguments.
+	 * Loads all registered initializers if their conditionals are met.
 	 *
 	 * @return void
 	 */
-	private function register( $register_as, $classname, $alias = '', $args = null ) {
-		if ( ! empty( $args ) ) {
-			$classname = [ $classname, $args ];
+	protected function load_initializers() {
+		foreach ( $this->initializers as $alias => $class ) {
+			$this->create_container( $class, 'initialize', $alias );
 		}
+	}
 
-		if ( '' === $alias ) {
-			$alias = strtolower( $classname );
-			$alias = explode( '\\', $alias );
-			$alias = array_pop( $alias );
+	/**
+	 * Loads all registered integrations if their conditionals are met.
+	 *
+	 * @return void
+	 */
+	public function load_integrations() {
+		foreach ( $this->integrations as $alias => $class ) {
+			$this->create_container( $class, 'hooks', $alias );
 		}
+	}
 
-		$this->{$register_as}[ $alias ] = $classname;
+	/**
+	 * Loads all registered routes if their conditionals are met.
+	 *
+	 * @return void
+	 */
+	public function load_routes() {
+		foreach ( $this->routes as $alias => $class ) {
+			$this->create_container( $class, 'register_routes', $alias );
+		}
 	}
 
 	/**
@@ -209,25 +192,37 @@ class Loader {
 	 * @return void
 	 */
 	private function create_container( $data, $method, $alias ): void {
-		$arguments = [];
-		$classname = $data;
+		$class_name = is_string( $data ) ? $data : $data[0];
+		$arguments  = is_string( $data ) ? [] : $data[1];
 
-		if ( Arr::accessible( $data ) ) {
-			$arguments = $data[1];
-			$classname = $data[0];
-		}
-
-		if ( ! \class_exists( $classname, true ) ) {
+		if ( ! \class_exists( $class_name, true ) ) {
 			return;
 		}
 
-		$container = new ReflectionClass( $classname );
+		$container = new ReflectionClass( $class_name );
 		$container = $container->newInstanceArgs( $arguments );
 		if ( null === $container ) {
 			return;
 		}
 
 		$container->$method();
-		$this->containers[ $alias ] = $container;
+
+		if ( is_string( $alias ) ) {
+			$this->containers[ $alias ] = $container;
+		}
+	}
+
+	/**
+	 * Define constant if not already set.
+	 *
+	 * @param string      $name  Constant name.
+	 * @param bool|string $value Constant value.
+	 *
+	 * @return void
+	 */
+	protected function define( $name, $value ): void {
+		if ( ! defined( $name ) ) {
+			define( $name, $value );
+		}
 	}
 }
