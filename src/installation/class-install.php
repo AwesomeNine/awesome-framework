@@ -25,7 +25,7 @@ abstract class Install implements Initializer_Interface {
 	 *
 	 * @var string
 	 */
-	protected $base_file = null;
+	abstract protected function get_base_file(): string;
 
 	/**
 	 * Runs this initializer.
@@ -33,9 +33,9 @@ abstract class Install implements Initializer_Interface {
 	 * @return void
 	 */
 	public function initialize(): void {
-		if ( null !== $this->base_file ) {
-			register_activation_hook( $this->base_file, [ $this, 'activation' ] );
-			register_deactivation_hook( $this->base_file, [ $this, 'deactivation' ] );
+		if ( null !== $this->get_base_file() ) {
+			register_activation_hook( $this->get_base_file(), [ $this, 'activation' ] );
+			register_deactivation_hook( $this->get_base_file(), [ $this, 'deactivation' ] );
 
 			add_action( 'wp_initialize_site', [ $this, 'initialize_site' ] );
 		}
@@ -49,7 +49,7 @@ abstract class Install implements Initializer_Interface {
 	 * @return void
 	 */
 	public function activation( $network_wide = false ): void {
-		register_uninstall_hook( $this->base_file, [ static::class, 'uninstall' ] );
+		register_uninstall_hook( $this->get_base_file(), [ static::class, 'uninstall' ] );
 
 		if ( ! is_multisite() || ! $network_wide ) {
 			$this->activate();
