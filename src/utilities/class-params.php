@@ -21,8 +21,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Params class
- *
- * phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound
  */
 class Params {
 

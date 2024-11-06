@@ -9,8 +9,6 @@
 
 namespace Awesome9\Framework;
 
-use ReflectionClass;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -85,7 +83,10 @@ class Loader {
 			$this->load_integrations();
 		}
 
-		\add_action( 'rest_api_init', [ $this, 'load_routes' ] );
+		// Only load routes if required/requested.
+		if ( ! empty( $this->routes ) ) {
+			\add_action( 'rest_api_init', [ $this, 'load_routes' ] );
+		}
 	}
 
 	/**
@@ -104,10 +105,10 @@ class Loader {
 		}
 
 		if ( '' === $alias ) {
-			$this->{$register_as}[] = $class_name;
-		} else {
-			$this->{$register_as}[ $alias ] = $class_name;
+			$alias = uniqid( $register_as . '_' );
 		}
+
+		$this->{$register_as}[ $alias ] = $class_name;
 	}
 
 	/**
@@ -162,6 +163,7 @@ class Loader {
 
 	/**
 	 * Loads all registered integrations if their conditionals are met.
+	 * Each initializer should implement an `initialize` method to be executed.
 	 *
 	 * @return void
 	 */
@@ -199,17 +201,14 @@ class Loader {
 			return;
 		}
 
-		$container = new ReflectionClass( $class_name );
-		$container = $container->newInstanceArgs( $arguments );
+		$container = empty( $arguments ) ? new $class_name() : new $class_name( ...$arguments );
+
 		if ( null === $container ) {
 			return;
 		}
 
 		$container->$method();
-
-		if ( is_string( $alias ) ) {
-			$this->containers[ $alias ] = $container;
-		}
+		$this->containers[ $alias ] = $container;
 	}
 
 	/**

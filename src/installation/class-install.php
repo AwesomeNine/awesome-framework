@@ -10,8 +10,8 @@
 namespace Awesome9\Framework\Installation;
 
 use WP_Site;
-use Awesome9\Framework\Interfaces\Initializer_Interface;
 use Awesome9\Framework\Utilities\WordPress;
+use Awesome9\Framework\Interfaces\Initializer_Interface;
 
 defined( 'ABSPATH' ) || exit;
 

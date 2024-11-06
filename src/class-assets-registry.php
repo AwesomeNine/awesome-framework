@@ -10,6 +10,7 @@
 namespace Awesome9\Framework;
 
 use Awesome9\Framework\Interfaces\Integration_Interface;
+use Awesome9\Framework\Utilities\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,6 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @method bool register_script(string $handle, string|false $src, string[] $deps = [], string|bool|null $ver = false, array|bool $args = [])
  * @method bool inline_script(string $handle, string $data, string $position = 'after')
  * @method bool is_script(string $handle, string $status = 'enqueued')
+ * @method bool localize_script(string $handle, string $object_name, array $l10n)
  *
  * Style functions:
  *
@@ -58,7 +60,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	abstract public function get_version(): string;
 
 	/**
-	 * Magic method to catch all calls to.
+	 * Magic method for handling dynamic asset operations like enqueue, dequeue, register, and inline.
 	 *
 	 * @param string $name      The name of the method.
 	 * @param array  $arguments The arguments passed to the method.
@@ -66,7 +68,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @return mixed
 	 */
 	public function __call( $name, $arguments ) {
-		if ( preg_match( '/^(enqueue|dequeue|register|deregister|is|inline)_(script|style)$/', $name, $matches ) ) {
+		if ( preg_match( '/^(enqueue|dequeue|register|deregister|is|inline|localize)_(script|style)$/', $name, $matches ) ) {
 			$action    = $matches[1];
 			$type      = $matches[2];
 			$handle    = $this->prefix_it( $arguments[0] );
@@ -76,7 +78,8 @@ abstract class Assets_Registry implements Integration_Interface {
 			switch ( $action ) {
 				case 'register':
 					$func_args[] = $this->resolve_url( $arguments[1] );
-					$func_args[] = $arguments[2] ?? [];
+					$func_args[] = is_array( $arguments[2] ) && ! empty( $arguments[2] )
+						? array_map( [ $this, 'prefix_dep' ], $arguments[2] ) : [];
 					$func_args[] = isset( $arguments[3] ) && ! empty( $arguments[3] ) ? $arguments[3] : $this->get_version();
 					$func_args[] = $arguments[4] ?? ( 'script' === $type ? true : 'all' );
 					break;
@@ -89,8 +92,17 @@ abstract class Assets_Registry implements Integration_Interface {
 						$func_args[] = $arguments[2] ?? 'after';
 					}
 					break;
+				case 'localize':
+					$func_args[] = $arguments[1] ?? 'unknown';
+					$func_args[] = $arguments[2] ?? [];
+					break;
 				default:
 					break;
+			}
+
+			if ( ! function_exists( $func ) ) {
+				trigger_error( "Function $func does not exist.", E_USER_WARNING ); // phpcs:ignore
+				return null;
 			}
 
 			return call_user_func_array( $func, $func_args );
@@ -178,5 +190,21 @@ abstract class Assets_Registry implements Integration_Interface {
 		$name = $method_map[ $name ] ?? $name;
 
 		return 'wp_' . $name;
+	}
+
+	/**
+	 * Prefix the dependency
+	 *
+	 * @param string $dep Name of the dependency.
+	 *
+	 * @return string
+	 */
+	private function prefix_dep( $dep ): string {
+		if ( Str::starts_with( '_pre_', $dep ) ) {
+			$dep = str_replace( '_pre_', '', $dep );
+			$dep = $this->prefix_it( $dep );
+		}
+
+		return $dep;
 	}
 }

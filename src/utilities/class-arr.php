@@ -2,9 +2,9 @@
 /**
  * Array utilities
  *
+ * @since   1.0.0
  * @package Awesome9\Framework\Utilities
  * @author  Awesome9 <info@awesome9.co>
- * @since   1.0.0
  */
 
 namespace Awesome9\Framework\Utilities;
@@ -14,7 +14,7 @@ use ArrayAccess;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Array class.
+ * Array utilities class.
  */
 class Arr {
 
@@ -25,20 +25,20 @@ class Arr {
 	 *
 	 * @return bool
 	 */
-	public static function accessible( $value ) {
+	public static function accessible( $value ): bool {
 		return is_array( $value ) || $value instanceof ArrayAccess;
 	}
 
 	/**
 	 * Add an element to an array using "dot" notation if it doesn't exist.
 	 *
-	 * @param  array            $arr   Array to add to.
-	 * @param  string|int|float $key   Key.
-	 * @param  mixed            $value Value.
+	 * @param array      $arr   Array to add to.
+	 * @param string|int $key   Key.
+	 * @param mixed      $value Value.
 	 *
 	 * @return array
 	 */
-	public static function add( $arr, $key, $value ) {
+	public static function add( array &$arr, $key, $value ): array {
 		if ( null === static::get( $arr, $key ) ) {
 			static::set( $arr, $key, $value );
 		}
@@ -54,36 +54,32 @@ class Arr {
 	 *
 	 * @return bool
 	 */
-	public static function exists( $arr, $key ) {
+	public static function exists( $arr, $key ): bool {
 		if ( $arr instanceof ArrayAccess ) {
 			return $arr->offsetExists( $key );
-		}
-
-		if ( is_float( $key ) ) {
-			$key = (string) $key;
 		}
 
 		return array_key_exists( $key, $arr );
 	}
 
 	/**
-	 * Create an array from string.
+	 * Create an array from a string by splitting it by the separator.
 	 *
-	 * @param string $string    The string to split.
+	 * @param string $str       The string to split.
 	 * @param string $separator Specifies where to break the string.
 	 *
-	 * @return array Returns an array after applying the function to each one.
+	 * @return array
 	 */
-	public static function from_string( $string, $separator = ',' ) {
-		return array_values( array_filter( array_map( 'trim', explode( $separator, $string ) ) ) );
+	public static function from_string( string $str, string $separator = ',' ): array {
+		return array_values( array_filter( array_map( 'trim', explode( $separator, $str ) ) ) );
 	}
 
 	/**
 	 * Get an item from an array using "dot" notation.
 	 *
-	 * @param \ArrayAccess|array $arr     Array to use.
-	 * @param string|int|null    $key     Key to get.
-	 * @param mixed              $default Default value if not found.
+	 * @param ArrayAccess|array $arr     Array to use.
+	 * @param string|int|null   $key     Key to get.
+	 * @param mixed             $default Default value if not found.
 	 *
 	 * @return mixed
 	 */
@@ -100,11 +96,7 @@ class Arr {
 			return $arr[ $key ];
 		}
 
-		if ( ! str_contains( $key, '.' ) ) {
-			return $arr[ $key ] ?? $default;
-		}
-
-		foreach ( explode( '.', $key ) as $segment ) {
+		foreach ( explode( '.', (string) $key ) as $segment ) {
 			if ( static::accessible( $arr ) && static::exists( $arr, $segment ) ) {
 				$arr = $arr[ $segment ];
 			} else {
@@ -118,12 +110,12 @@ class Arr {
 	/**
 	 * Check if an item or items exist in an array using "dot" notation.
 	 *
-	 * @param \ArrayAccess|array $arr  Array to use.
-	 * @param string|array       $keys Keys to check.
+	 * @param ArrayAccess|array $arr  Array to use.
+	 * @param string|array      $keys Keys to check.
 	 *
 	 * @return bool
 	 */
-	public static function has( $arr, $keys ) {
+	public static function has( $arr, $keys ): bool {
 		$keys = (array) $keys;
 
 		if ( ! $arr || [] === $keys ) {
@@ -152,23 +144,15 @@ class Arr {
 	/**
 	 * Determine if any of the keys exist in an array using "dot" notation.
 	 *
-	 * @param \ArrayAccess|array $arr  Array to use.
-	 * @param string|array       $keys Keys to check.
+	 * @param ArrayAccess|array $arr  Array to use.
+	 * @param string|array      $keys Keys to check.
 	 *
 	 * @return bool
 	 */
-	public static function has_any( $arr, $keys ) {
-		if ( null === $keys ) {
-			return false;
-		}
-
+	public static function has_any( $arr, $keys ): bool {
 		$keys = (array) $keys;
 
-		if ( ! $arr ) {
-			return false;
-		}
-
-		if ( [] === $keys ) {
+		if ( ! $arr || [] === $keys ) {
 			return false;
 		}
 
@@ -182,52 +166,18 @@ class Arr {
 	}
 
 	/**
-	 * Insert a single array item inside another array at a set position
+	 * Insert a single array item inside another array at a set position.
 	 *
-	 * @param array $arr      Array to modify. Is passed by reference, and no return is needed.
+	 * @param array $arr      Array to modify. Is passed by reference.
 	 * @param array $new      New array to insert.
 	 * @param int   $position Position in the main array to insert the new array.
 	 */
-	public static function insert( &$arr, $new, $position ) {
-		$before = array_slice( $arr, 0, $position - 1 );
-		$after  = array_diff_key( $arr, $before );
-		$arr    = array_merge( $before, $new, $after );
-	}
-
-	/**
-	 * Pluck an array of values from an array.
-	 *
-	 * @param iterable              $arr   Array to pluck from.
-	 * @param string|array|int|null $value Value index dot notation.
-	 * @param string|array|null     $key   Key index dot notation.
-	 *
-	 * @return array
-	 */
-	public static function pluck( $arr, $value, $key = null ) {
-		$results = [];
-
-		[$value, $key] = static::explode_pluck_parameters( $value, $key );
-
-		foreach ( $arr as $item ) {
-			$item_value = static::get( $item, $value );
-
-			// If the key is "null", we will just append the value to the array and keep
-			// looping. Otherwise we will key the array using the value of the key we
-			// received from the developer. Then we'll return the final array form.
-			if ( null === $key ) {
-				$results[] = $item_value;
-			} else {
-				$item_key = static::get( $item, $key );
-
-				if ( is_object( $item_key ) && method_exists( $item_key, '__toString' ) ) {
-					$item_key = (string) $item_key;
-				}
-
-				$results[ $item_key ] = $item_value;
-			}
-		}
-
-		return $results;
+	public static function insert( array &$arr, array $new, int $position ) {
+		$arr = array_merge(
+			array_slice( $arr, 0, $position ),
+			$new,
+			array_slice( $arr, $position )
+		);
 	}
 
 	/**
@@ -239,20 +189,17 @@ class Arr {
 	 *
 	 * @return array
 	 */
-	public static function prepend( $arr, $value, $key = null ) {
-		if ( 2 === func_num_args() ) {
+	public static function prepend( array $arr, $value, $key = null ): array {
+		if ( null === $key ) {
 			array_unshift( $arr, $value );
 		} else {
 			$arr = [ $key => $value ] + $arr;
 		}
-
 		return $arr;
 	}
 
 	/**
 	 * Set an array item to a given value using "dot" notation.
-	 *
-	 * If no key is given to the method, the entire array will be replaced.
 	 *
 	 * @param array           $arr   Array to set into.
 	 * @param string|int|null $key   Key.
@@ -260,7 +207,7 @@ class Arr {
 	 *
 	 * @return array
 	 */
-	public static function set( &$arr, $key, $value ) {
+	public static function set( array &$arr, $key, $value ): array {
 		if ( null === $key ) {
 			$arr = $value;
 			return $arr;
@@ -291,14 +238,14 @@ class Arr {
 	}
 
 	/**
-	 * Sort the array in descending order using the given callback or "dot" notation.
+	 * Sort the array in descending order.
 	 *
 	 * @param array $arr Array to sort.
 	 *
 	 * @return array
 	 */
-	public static function sort_desc( $arr ) {
-		arsort( $arr, SORT_REGULAR );
+	public static function sort_desc( array $arr ): array {
+		arsort( $arr );
 
 		return $arr;
 	}
@@ -311,7 +258,7 @@ class Arr {
 	 *
 	 * @return array
 	 */
-	public static function where( $arr, callable $callback ) {
+	public static function where( array $arr, callable $callback ): array {
 		return array_filter( $arr, $callback, ARRAY_FILTER_USE_BOTH );
 	}
 
@@ -322,23 +269,22 @@ class Arr {
 	 *
 	 * @return array
 	 */
-	public static function where_not_null( $arr ): array {
-		return static::where( $arr, fn ( $value ) => null !== $value );
+	public static function where_not_null( array $arr ): array {
+		return static::where( $arr, fn( $value ) => null !== $value );
 	}
 
 	/**
-	 * Explode the "value" and "key" arguments passed to "pluck".
+	 * If the given value is not an array and not null, wrap it in one.
 	 *
-	 * @param string|array      $value Value array.
-	 * @param string|array|null $key   Key array.
+	 * @param mixed $value Value to wrap.
 	 *
 	 * @return array
 	 */
-	protected static function explode_pluck_parameters( $value, $key ) {
-		$value = is_string( $value ) ? explode( '.', $value ) : $value;
+	public static function wrap( $value ): array {
+		if ( null === $value ) {
+			return [];
+		}
 
-		$key = null === $key || is_array( $key ) ? $key : explode( '.', $key );
-
-		return [ $value, $key ];
+		return is_array( $value ) ? $value : [ $value ];
 	}
 }

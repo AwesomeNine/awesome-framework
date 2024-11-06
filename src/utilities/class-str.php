@@ -16,14 +16,47 @@ defined( 'ABSPATH' ) || exit;
  */
 class Str {
 	/**
-	 * Validates whether the passed variable is a empty string.
+	 * Capitalizes a string.
+	 *
+	 * @param string $str The string to be capitalized.
+	 *
+	 * @return string The capitalized string.
+	 */
+	public static function capitalize( string $str ): string {
+		return ucwords( str_replace( '_', ' ', $str ) );
+	}
+
+	/**
+	 * Check if the string contains the given value.
+	 *
+	 * @param string $needle      The sub-string to search for.
+	 * @param string $haystack    The string to search.
+	 * @param bool   $ignore_case Whether to ignore case.
+	 *
+	 * @return bool
+	 */
+	public static function contains( string $needle, string $haystack, bool $ignore_case = false ): bool {
+		if ( self::is_empty( $needle ) ) {
+			return false;
+		}
+
+		if ( $ignore_case ) {
+			$needle   = self::to_lower( $needle );
+			$haystack = self::to_lower( $haystack );
+		}
+
+		return mb_strpos( $haystack, $needle ) !== false;
+	}
+
+	/**
+	 * Validates whether the passed variable is an empty string.
 	 *
 	 * @param mixed $variable The variable to validate.
 	 *
-	 * @return bool Whether or not the passed value is a non-empty string.
+	 * @return bool Whether or not the passed value is an empty string.
 	 */
 	public static function is_empty( $variable ): bool {
-		return ! is_string( $variable ) || empty( $variable );
+		return ! is_string( $variable ) || '' === $variable;
 	}
 
 	/**
@@ -38,33 +71,20 @@ class Str {
 	}
 
 	/**
-	 * Check if the string contains the given value.
-	 *
-	 * @param string $needle      The sub-string to search for.
-	 * @param string $haystack    The string to search.
-	 * @param bool   $ignore_case Whether to ignore case.
-	 *
-	 * @return bool
-	 */
-	public static function contains( $needle, $haystack, $ignore_case = false ): bool {
-		if ( $ignore_case ) {
-			$needle   = strtolower( $needle );
-			$haystack = strtolower( $haystack );
-		}
-
-		return self::is_non_empty( $needle ) ? mb_strpos( $haystack, $needle ) !== false : false;
-	}
-
-	/**
-	 * Check if the string end with the given value.
+	 * Check if the string ends with the given value.
 	 *
 	 * @param string $needle   The sub-string to search for.
 	 * @param string $haystack The string to search.
 	 *
 	 * @return bool
 	 */
-	public static function ends_with( $needle, $haystack ): bool {
-		return static::is_empty( $needle ) || mb_substr( $haystack, -static::length( $needle ) ) === (string) $needle;
+	public static function ends_with( string $needle, string $haystack ): bool {
+		if ( self::is_empty( $needle ) ) {
+			return false;
+		}
+
+		$needle_length = self::length( $needle );
+		return mb_substr( $haystack, -$needle_length ) === $needle;
 	}
 
 	/**
@@ -75,12 +95,8 @@ class Str {
 	 *
 	 * @return int
 	 */
-	public static function length( $value, $encoding = null ): int {
-		if ( $encoding ) {
-			return mb_strlen( $value, $encoding );
-		}
-
-		return mb_strlen( $value );
+	public static function length( string $value, ?string $encoding = null ): int {
+		return $encoding ? mb_strlen( $value, $encoding ) : mb_strlen( $value );
 	}
 
 	/**
@@ -91,34 +107,35 @@ class Str {
 	 *
 	 * @return bool
 	 */
-	public static function starts_with( $needle, $haystack ): bool {
-		return static::is_empty( $needle ) || mb_substr( $haystack, 0, static::length( $needle ) ) === (string) $needle;
+	public static function starts_with( string $needle, string $haystack ): bool {
+		if ( self::is_empty( $needle ) ) {
+			return false;
+		}
+
+		return mb_substr( $haystack, 0, self::length( $needle ) ) === $needle;
 	}
 
 	/**
-	 * Wrapper for mb_strtoupper which see's if supported first.
+	 * Convert a string to uppercase.
 	 *
-	 * @param string      $str      String to format.
-	 * @param string|null $encoding Encoding to use.
+	 * @param string      $str      The string to convert.
+	 * @param string|null $encoding The encoding to use.
 	 *
 	 * @return string
 	 */
-	public static function to_upper( $str, $encoding = 'UTF-8' ) {
-		$str = $str ?? '';
+	public static function to_upper( string $str, ?string $encoding = 'UTF-8' ): string {
 		return $encoding ? mb_strtoupper( $str, $encoding ) : mb_strtoupper( $str );
 	}
 
 	/**
-	 * Make a string lowercase.
-	 * Try to use mb_strtolower() when available.
+	 * Convert a string to lowercase.
 	 *
-	 * @param string      $str      String to format.
-	 * @param string|null $encoding Encoding to use.
+	 * @param string      $str      The string to convert.
+	 * @param string|null $encoding The encoding to use.
 	 *
 	 * @return string
 	 */
-	public static function to_lower( $str, $encoding = 'UTF-8' ) {
-		$str = $str ?? '';
+	public static function to_lower( string $str, ?string $encoding = 'UTF-8' ): string {
 		return $encoding ? mb_strtolower( $str, $encoding ) : mb_strtolower( $str );
 	}
 }
