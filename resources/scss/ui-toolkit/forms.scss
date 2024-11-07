@@ -1,0 +1,147 @@
+/* stylelint-disable no-duplicate-selectors */
+.#{$namespace}-form {
+	&__row {
+		@apply flex flex-wrap items-start w-full p-4 box-border;
+	}
+
+	&__label {
+		@apply block text-base font-semibold mb-1 w-[200px];
+	}
+
+	&__input_wrap {
+		@apply flex-1;
+	}
+
+	&__help {
+		@apply block text-xs text-gray-500 mt-2.5 italic;
+	}
+}
+
+.#{$namespace}-form__row {
+	.input-text,
+	.input-textarea,
+	.input-select {
+		@apply min-w-[400px] max-w-screen-lg appearance-none rounded-md border border-gray-300;
+		@apply block w-full py-2 px-3 text-sm;
+		@apply focus:border-blue-300 focus:outline-4 focus:outline-blue-100 focus:shadow-none;
+	}
+
+	.input-checkboxes,
+	.input-radios {
+		@apply flex flex-wrap flex-col space-y-4;
+
+		label {
+			@apply text-sm cursor-pointer;
+		}
+
+		&.input-inline {
+			@apply flex-row space-x-6 space-y-0;
+		}
+	}
+
+	.input-checkbox,
+	.input-radio {
+		@apply flex items-center;
+	}
+
+	.input-checkbox {
+		input {
+			@apply w-5 h-5 appearance-none border cursor-pointer border-gray-300 rounded-md mr-2 hover:border-blue-500 hover:bg-blue-100 checked:border-blue-500 checked:bg-blue-100 mt-0.5;
+
+			&:checked::before {
+				@apply -my-[0.1rem] -mx-[0.15rem];
+			}
+		}
+	}
+
+	.input-radio {
+		input {
+			@apply hidden;
+
+			&:checked + label .input-radio__button {
+				@apply border-blue-500 bg-blue-500 shadow-inner;
+				--tw-shadow: inset 0 0 0 3.5px #eaf1fc;
+			}
+
+			&:checked:disabled + label .input-radio__button {
+				@apply cursor-not-allowed border-gray-300 bg-gray-300;
+				--tw-shadow: inset 0 0 0 3.5px #f2f4f7;
+			}
+		}
+
+		label {
+			@apply flex items-center;
+		}
+
+		&__button {
+			@apply border border-gray-300 rounded-full mr-2 w-4 h-4;
+			transition:
+				background 0.2s,
+				transform 0.2s;
+		}
+	}
+
+	.input-file {
+		@apply min-w-96 w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed;
+
+		&__icon {
+			@apply w-full text-center;
+
+			svg {
+				@apply mx-auto block text-gray-500;
+			}
+
+			h2 {
+				@apply text-gray-400 text-xs;
+			}
+		}
+
+		&__label {
+			@apply w-full flex flex-col items-center;
+
+			h4 {
+				@apply text-center text-gray-900 text-sm font-medium leading-snug;
+			}
+		}
+
+		&__button {
+			@apply flex items-center justify-center w-28 h-9 px-2 bg-wordpress rounded-full shadow text-white text-xs font-semibold cursor-pointer focus:outline-none;
+		}
+	}
+
+	.input-switch {
+		@apply flex items-center mb-5 space-x-3;
+
+		label {
+			@apply relative inline-flex items-center;
+		}
+
+		input {
+			@apply sr-only;
+
+			&:checked ~ .input-switch__button {
+				@apply bg-blue-500 hover:bg-blue-700;
+			}
+
+			&:checked + .input-switch__button::after {
+				@apply border-white;
+				transform: translateX(80%);
+			}
+		}
+
+		&__label {
+			@apply text-sm font-medium text-gray-600;
+		}
+
+		&__button {
+			@apply w-9 h-5 bg-gray-200 rounded-full transition-all ease-in-out duration-500 cursor-pointer;
+			@apply hover:bg-gray-300;
+
+			&::after {
+				@apply content-[""] transition-all;
+				@apply absolute top-[1px] left-[2px];
+				@apply bg-white border-gray-300 border rounded-full h-4 w-4;
+			}
+		}
+	}
+}

@@ -1,0 +1,46 @@
+.#{$namespace}-colors {
+	@apply flex flex-wrap gap-12 text-center;
+
+	li {
+		@apply flex flex-col gap-y-2 tracking-wider;
+	}
+}
+.#{$namespace}-color {
+	@apply w-20 h-20 rounded-md block;
+
+	&--primary {
+		@apply bg-wordpress;
+	}
+
+	&--secondary {
+		@apply bg-secondary;
+	}
+
+	&--success {
+		@apply bg-emerald-500;
+	}
+
+	&--danger {
+		@apply bg-red-500;
+	}
+
+	&--warning {
+		@apply bg-yellow-500;
+	}
+
+	&--info {
+		@apply bg-blue-500;
+	}
+
+	&--gray {
+		@apply bg-gray-300;
+	}
+
+	&--gray-light {
+		@apply bg-gray-100;
+	}
+
+	&--gray-dark {
+		@apply bg-gray-800;
+	}
+}

@@ -1,0 +1,58 @@
+.#{$namespace}-button {
+	@apply py-3 px-6 text-sm bg-gray-500 text-white rounded font-medium text-center shadow-sm tracking-wide;
+	@apply cursor-pointer transition-all duration-500;
+	@apply hover:bg-gray-700;
+
+	&--primary {
+		@apply bg-wordpress text-white;
+		@apply hover:bg-wordpress-dark;
+	}
+
+	&--secondary {
+		@apply bg-secondary text-black;
+		@apply hover:bg-wordpress hover:text-white;
+	}
+
+	&--info {
+		@apply bg-blue-500 text-white;
+		@apply hover:bg-blue-700;
+	}
+
+	&--success {
+		@apply bg-emerald-500 text-white;
+		@apply hover:bg-emerald-700;
+	}
+
+	&--warning {
+		@apply bg-yellow-500 text-white;
+		@apply hover:bg-yellow-700;
+	}
+
+	&--error {
+		@apply bg-red-500 text-white;
+		@apply hover:bg-red-700;
+	}
+
+	&[disabled] {
+		@apply bg-gray-300 text-gray-500 cursor-not-allowed;
+		@apply hover:bg-gray-300;
+	}
+
+	&--small {
+		@apply py-2 px-4 text-xs;
+	}
+
+	&--large {
+		@apply py-4 px-8 text-lg;
+	}
+
+	&--block {
+		@apply block w-full;
+	}
+}
+
+.demo-buttons {
+	.#{$namespace}-button {
+		@apply mr-4;
+	}
+}

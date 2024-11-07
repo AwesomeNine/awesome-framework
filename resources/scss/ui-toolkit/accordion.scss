@@ -1,0 +1,47 @@
+.#{$namespace}-accordion-group {
+	@apply border border-primary bg-white rounded-md;
+
+	.accordion:last-child {
+		@apply border-b-0;
+	}
+}
+
+.accordion {
+	@apply relative transition-all duration-500;
+	@apply border-b border-primary;
+
+	input {
+		@apply absolute opacity-0 z-[-1];
+
+		&:checked {
+			~ .accordion__content {
+				@apply max-h-40 pb-4;
+			}
+
+			+ .accordion__header::after {
+				transform: rotate(270deg);
+			}
+		}
+	}
+
+	&__header {
+		@apply flex font-semibold text-lg justify-between p-4 cursor-pointer;
+
+		&::after {
+			content: "\276F";
+			@apply w-4 h-4 text-center transform rotate-90 transition-all duration-300;
+		}
+	}
+
+	&__content {
+		@apply px-4 max-h-0 overflow-hidden transition-all duration-300;
+
+		&:first-child {
+			@apply pt-0 mt-0;
+		}
+
+		&:last-child {
+			@apply mb-0 pb-0;
+		}
+	}
+}

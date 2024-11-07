@@ -1,0 +1,9 @@
+.#{$namespace}-ui {
+	.#{$namespace}-lead {
+		@apply text-lg font-bold mb-4;
+	}
+
+	.#{$namespace}-description {
+		@apply text-sm text-gray-400 mb-4 italic;
+	}
+}

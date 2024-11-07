@@ -1,0 +1,38 @@
+html {
+	*,
+	::before,
+	::after {
+		@apply border-0 border-solid;
+	}
+
+	::before,
+	::after {
+		--tw-content: "";
+	}
+}
+
+.wrap {
+	&:empty {
+		@apply hidden;
+	}
+}
+
+.#{$namespace}-page {
+	@apply bg-primary;
+
+	#wpfooter {
+		@apply bg-white p-5 border-t border-primary;
+	}
+
+	.#{$namespace}-notices {
+		.notice,
+		div.updated,
+		div.error {
+			@apply ml-0;
+		}
+	}
+
+	a {
+		@apply no-underline;
+	}
+}

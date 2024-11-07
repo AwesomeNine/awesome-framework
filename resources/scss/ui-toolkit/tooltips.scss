@@ -1,0 +1,59 @@
+.#{$namespace}-tooltip {
+	@apply relative inline-block;
+
+	&__controller {
+		@apply inline-flex whitespace-nowrap;
+	}
+
+	&__content {
+		@apply absolute py-2 px-4 invisible z-[9999] whitespace-nowrap rounded-md bg-white text-xs text-gray-800 font-medium transition-opacity duration-300 border border-gray-300;
+	}
+
+	&__backdrop {
+		@apply absolute -z-10 h-3 w-3 border-gray-300 bg-white;
+	}
+
+	&__controller:hover + &__content {
+		@apply visible;
+	}
+
+	&--top &__content {
+		@apply bottom-full left-1/2 mb-3 shadow-[0px_12px_30px_-4px_rgba(16,24,40,0.08)];
+		transform: translateX(-50%);
+	}
+
+	&--top &__backdrop {
+		@apply -bottom-[0.45rem] left-1/2 border-b border-r;
+		transform: translateX(-50%) rotate(45deg);
+	}
+
+	&--right &__content {
+		@apply left-full top-1/2 py-3 ml-3 shadow-[-12px_0px_30px_-4px_rgba(16,24,40,0.08)];
+		transform: translateY(-50%);
+	}
+
+	&--right &__backdrop {
+		@apply -left-[0.45rem] top-1/2 border-b border-l;
+		transform: translateY(-50%) rotate(45deg);
+	}
+
+	&--bottom &__content {
+		@apply top-full left-1/2 mt-3 shadow-[0px_-12px_30px_-4px_rgba(16,24,40,0.08)];
+		transform: translateX(-50%);
+	}
+
+	&--bottom &__backdrop {
+		@apply -top-[0.45rem] left-1/2 border-t border-l;
+		transform: translateX(-50%) rotate(45deg);
+	}
+
+	&--left &__content {
+		@apply right-full top-1/2 mr-3 py-3 shadow-[12px_0px_30px_-4px_rgba(16,24,40,0.08)];
+		transform: translateY(-50%);
+	}
+
+	&--left &__backdrop {
+		@apply -right-[0.45rem] top-1/2 border-t border-r;
+		transform: translateY(-50%) rotate(45deg);
+	}
+}

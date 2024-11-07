@@ -1,0 +1,51 @@
+.#{$namespace}-modal {
+	@apply relative z-[10000];
+
+	&__overlay {
+		&,
+		&__close {
+			@apply top-0 left-0 w-full h-full;
+		}
+
+		@apply fixed bg-black bg-opacity-20 hidden;
+
+		&__close {
+			@apply absolute;
+		}
+	}
+
+	&__content {
+		@apply relative my-32 mx-auto py-10 px-5 bg-white shadow-lg rounded-md;
+	}
+
+	&__controller:checked + &__overlay {
+		@apply opacity-100 block;
+		animation: fade-in 0.4s;
+	}
+
+	&__controller:checked + &__overlay &__content {
+		animation: scoot-up 0.2s;
+		animation-timing-function: ease-out;
+		transform-origin: 50% 0;
+	}
+
+	&--xs &__content {
+		@apply max-w-[480px];
+	}
+
+	&--sm &__content {
+		@apply max-w-screen-sm;
+	}
+
+	&--md &__content {
+		@apply max-w-screen-md;
+	}
+
+	&--lg &__content {
+		@apply max-w-screen-lg;
+	}
+
+	&--xl &__content {
+		@apply max-w-screen-xl;
+	}
+}

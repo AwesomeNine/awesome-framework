@@ -1,0 +1,52 @@
+.#{$namespace}-card {
+	@apply relative rounded-md mb-4 transition-all duration-500;
+	@apply border border-solid border-primary bg-white;
+
+	> header {
+		@apply border-b border-primary bg-primary py-4 px-6 rounded-t-md;
+
+		> :first-child {
+			@apply m-0;
+		}
+	}
+
+	> footer {
+		@apply border-t border-primary bg-primary py-4 px-6 rounded-b-md;
+
+		:first-child {
+			@apply pt-0 mt-0;
+		}
+
+		:last-child {
+			@apply mb-0 pb-0;
+		}
+	}
+
+	&__content {
+		@apply p-6;
+
+		> :first-child {
+			@apply pt-0 mt-0;
+		}
+
+		> :last-child {
+			@apply mb-0 pb-0;
+		}
+	}
+
+	&.with-sections {
+		.#{$namespace}-card {
+			&__content {
+				@apply p-0;
+			}
+
+			&__section {
+				@apply p-6 border-b border-primary;
+
+				&:last-child {
+					@apply border-b-0 rounded-b-md;
+				}
+			}
+		}
+	}
+}

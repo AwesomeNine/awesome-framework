@@ -1,0 +1,7 @@
+.with-border {
+	@apply border border-solid border-gray-400;
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}

@@ -1,0 +1,18 @@
+.#{$namespace}-page {
+	#wpbody-content {
+		#screen-meta,
+		#screen-meta-links {
+			@apply hidden;
+		}
+	}
+
+	.#{$namespace}-header {
+		#screen-meta {
+			@apply border-0 shadow-lg;
+		}
+
+		#screen-meta-links .show-settings {
+			@apply border-0 shadow-md;
+		}
+	}
+}
