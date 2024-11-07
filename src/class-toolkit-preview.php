@@ -99,7 +99,7 @@ class Toolkit_Preview implements Integration_Interface {
 	 * @return void
 	 */
 	public function add_page(): void {
-		add_menu_page(
+		$hook = add_menu_page(
 			__( 'Toolkit Preview', 'awesome9' ),
 			__( 'Toolkit Preview', 'awesome9' ),
 			'manage_options',
@@ -108,6 +108,17 @@ class Toolkit_Preview implements Integration_Interface {
 			'dashicons-admin-tools',
 			99
 		);
+
+		add_action( "load-{$hook}", [ $this, 'enqueue_assets' ] );
+	}
+
+	/**
+	 * Enqueue assets.
+	 *
+	 * @return void
+	 */
+	public function enqueue_assets(): void {
+		wp_enqueue_style( 'ui-toolkit', AWESOME9_FRAMEWORK_BASE_URL . 'assets/css/ui-toolkit.css' );
 	}
 
 	/**

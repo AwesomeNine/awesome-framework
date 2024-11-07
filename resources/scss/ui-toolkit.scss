@@ -1,27 +1,27 @@
 // Import 3rd party components
-@import "prism";
+@import "ui-toolkit/prism";
 
 // Page
-@import "page";
-@import "page-header";
+@import "ui-toolkit/page";
+@import "ui-toolkit/page-header";
 
 // Basic
-@import "heading";
-@import "paragraphs";
+@import "ui-toolkit/heading";
+@import "ui-toolkit/paragraphs";
 
 // Global
-@import "modifiers";
-@import "elem-states";
-@import "animations";
+@import "ui-toolkit/modifiers";
+@import "ui-toolkit/elem-states";
+@import "ui-toolkit/animations";
 
 // Components
-@import "accordion";
-@import "alerts";
-@import "buttons";
-@import "cards";
-@import "colors";
-@import "drawer";
-@import "forms";
-@import "modal";
-@import "tabs";
-@import "tooltips";
+@import "ui-toolkit/accordion";
+@import "ui-toolkit/alerts";
+@import "ui-toolkit/buttons";
+@import "ui-toolkit/cards";
+@import "ui-toolkit/colors";
+@import "ui-toolkit/drawer";
+@import "ui-toolkit/forms";
+@import "ui-toolkit/modal";
+@import "ui-toolkit/tabs";
+@import "ui-toolkit/tooltips";

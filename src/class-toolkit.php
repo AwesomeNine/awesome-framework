@@ -53,7 +53,7 @@ class Toolkit {
 	 *
 	 * @return void
 	 */
-	public static function alerts( $content, $title = '', $type = 'default', $icon = '', $classnames = '' ): void {
+	public static function alert( $content, $title = '', $type = 'default', $icon = '', $classnames = '' ): void {
 		Components\Alerts::render( $content, $title, $type, $icon, $classnames );
 	}
 
