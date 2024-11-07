@@ -2,7 +2,6 @@
 
 // Define source and destination paths
 $source = dirname( __DIR__ ) . '/assets/awesome9';
-error_log($source);
 
 // Function to recursively delete a directory
 function deleteDirectory($dir) {
