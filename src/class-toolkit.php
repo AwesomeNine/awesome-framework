@@ -359,7 +359,7 @@ class Toolkit {
 	 *
 	 * @return string
 	 */
-	public static function get_svg( $file, $folder = 'resources/img/' ): string {
+	public static function get_svg( $file, $folder = 'vendor/awesome9/framework/resources/img/' ): string {
 		$file_url = AWESOME9_FRAMEWORK_BASE_URL . $folder . $file;
 
 		return file_get_contents( $file_url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
