@@ -44,6 +44,9 @@
 		],
 		"post-update-cmd": [
 			"php scripts/copy-resources.php"
+		],
+		"post-uninstall-cmd": [
+			"php scripts/remove-resources.php"
 		]
 	}
 }

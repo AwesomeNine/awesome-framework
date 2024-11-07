@@ -2,7 +2,7 @@
 
 // Define source and destination paths
 $source      = dirname( __DIR__ ) . '/resources';
-$destination = dirname( __DIR__, 4 ) . '/resources';
+$destination = dirname( __DIR__, 4 ) . '/assets/awesome9';
 
 // Function to recursively copy files and directories
 function recurseCopy($src, $dst) {
