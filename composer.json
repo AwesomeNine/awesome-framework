@@ -39,7 +39,11 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
-			"composer global require wp-cli/wp-cli"
+			"composer global require wp-cli/wp-cli",
+			"php scripts/copy-resources.php"
+		],
+		"post-update-cmd": [
+			"php scripts/copy-resources.php"
 		]
 	}
 }
