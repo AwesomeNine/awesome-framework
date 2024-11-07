@@ -1,8 +1,8 @@
 <?php // phpcs:ignoreFile
 
 // Define source and destination paths
-$source      = __DIR__ . '/../vendor/awesome9/framework/resources';
-$destination = __DIR__ . '/../resources';
+$source      = dirname( __DIR__ ) . '/resources';
+$destination = dirname( __DIR__, 4 ) . '/resources';
 
 // Function to recursively copy files and directories
 function recurseCopy($src, $dst) {
