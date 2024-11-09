@@ -1,0 +1,46 @@
+.settings {
+
+	&-wrap {
+		@apply flex px-10 py-5 m-0;
+	}
+
+	&-sidebar {
+		@apply w-48 mr-10;
+	}
+
+	&-tablist {
+		@apply sticky top-0 w-full;
+
+		li {
+			@apply block mr-2 mb-2;
+		}
+
+		a {
+			@apply flex items-center px-4 py-3 text-base text-gray-600 no-underline leading-none !shadow-none;
+
+			span {
+				@apply text-base mr-3 leading-none h-auto;
+			}
+
+			&.active {
+				@apply text-wordpress bg-white rounded border border-black/15;
+			}
+
+			&:hover {
+				@apply text-wordpress;
+			}
+		}
+	}
+
+	&-tab-pages {
+		@apply flex-1 w-full relative pl-10 mt-4 border-l border-black/15;
+	}
+
+	&-tab-page {
+		@apply hidden min-h-[400px];
+
+		&-title {
+			@apply text-2xl font-medium m-0 leading-none;
+		}
+	}
+}
