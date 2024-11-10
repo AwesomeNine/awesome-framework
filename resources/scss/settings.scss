@@ -1,7 +1,9 @@
 .settings {
 
 	&-wrap {
-		@apply flex px-10 py-5 m-0;
+		@apply flex px-10 py-5 mx-auto;
+		max-width: 1160px;
+		min-width: 760px;
 	}
 
 	&-sidebar {
@@ -40,7 +42,62 @@
 		@apply hidden min-h-[400px];
 
 		&-title {
-			@apply text-2xl font-medium m-0 leading-none;
+			@apply text-2xl font-medium mt-0 leading-none;
 		}
+
+		&-content .settings-option-group:first-of-type .settings-option-group-title {
+			@apply hidden;
+		}
+	}
+
+	&-option-group {
+		@apply mb-8;
+
+		&-title {
+			@apply text-base font-normal mb-4 text-gray-500;
+		}
+
+		&-items {
+			.awesome9-form {
+
+				&__row {
+					@apply mb-2 px-0 py-5;
+					@apply items-center justify-between;
+				}
+
+				&__label {
+					@apply w-[unset] font-medium m-0;
+				}
+
+				&__help {
+					@apply text-sm not-italic text-gray-500 font-light mb-0;
+				}
+			}
+		}
+
+	}
+}
+
+.option-group-tmpl-default {
+	.awesome9-form {
+		&__row {
+			@apply mb-2 px-6 py-5;
+			@apply border border-primary/80 bg-white rounded-md  items-center justify-between;
+		}
+
+		&__label {
+			@apply w-[unset] font-medium;
+		}
+
+		&__help {
+			@apply text-sm not-italic text-gray-500 font-light;
+		}
+	}
+}
+
+.option-group-tmpl-merged {
+	.settings-option-group-items {
+		@apply px-6 divide-y divide-primary;
+		@apply border border-primary/80 bg-white rounded-md items-center justify-between;
 	}
 }

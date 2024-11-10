@@ -50,17 +50,6 @@ class Tab {
 	}
 
 	/**
-	 * Register the sections.
-	 *
-	 * @return void
-	 */
-	public function register(): void {
-		foreach ( $this->sections as $section ) {
-			$section->register();
-		}
-	}
-
-	/**
 	 * Render the tab.
 	 *
 	 * @return void

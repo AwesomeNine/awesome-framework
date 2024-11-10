@@ -10,6 +10,7 @@
 namespace Awesome9\Framework\Settings;
 
 use Awesome9\Framework\Traits\Arguments;
+use Awesome9\Framework\Utilities\HTML;
 
 /**
  * Section class.
@@ -32,6 +33,8 @@ class Section {
 	 */
 	public function __construct( $args ) {
 		$this->args = $args;
+		$this->set_defaults();
+		$this->register();
 	}
 
 	/**
@@ -39,37 +42,22 @@ class Section {
 	 *
 	 * @param array $args The field arguments.
 	 *
-	 * @return void
+	 * @return Section
 	 */
-	public function add_field( $args ) {
-		$args['section']  = $this->get( 'id' );
-		$args['callback'] = [ $this, 'render_field' ];
-		$this->fields[]   = $args;
-	}
-
-	/**
-	 * Register the section into WordPress.
-	 *
-	 * @return void
-	 */
-	public function register() {
-		\add_settings_section(
-			$this->get( 'id' ),
-			$this->get( 'title' ),
-			null,
-			$this->get( 'page' )
+	public function add_field( $args ): Section {
+		$args = wp_parse_args(
+			$args,
+			[
+				'id'      => '',
+				'title'   => '',
+				'section' => $this->get( 'id' ),
+				'page'    => $this->get( 'page' ),
+			]
 		);
 
-		foreach ( $this->fields as $field ) {
-			\add_settings_field(
-				$field['id'],
-				$field['title'],
-				$field['callback'],
-				$this->args['page'],
-				$this->args['id'],
-				$field
-			);
-		}
+		$this->fields[] = new Field( $args );
+
+		return $this;
 	}
 
 	/**
@@ -78,6 +66,38 @@ class Section {
 	 * @return void
 	 */
 	public function display(): void {
-		echo $this->get( 'title' );
+		require dirname( __DIR__, 2 ) . '/views/settings/section.php';
+	}
+
+	/**
+	 * Set the default arguments.
+	 *
+	 * @return void
+	 */
+	private function set_defaults(): void {
+		$this->args = wp_parse_args(
+			$this->args,
+			[
+				'wrapper_id'    => 'section-id-' . $this->get( 'id' ),
+				'wrapper_class' => HTML::classnames(
+					'settings-option-group',
+					$this->get( 'template' ) ? 'option-group-tmpl-' . $this->get( 'template' ) : 'option-group-tmpl-default',
+				),
+			]
+		);
+	}
+
+	/**
+	 * Register the section into WordPress.
+	 *
+	 * @return void
+	 */
+	private function register() {
+		\add_settings_section(
+			$this->get( 'id' ),
+			$this->get( 'title' ),
+			null,
+			$this->get( 'page' )
+		);
 	}
 }

@@ -64,10 +64,6 @@ abstract class Settings extends Screen {
 	public function register(): void {
 		$this->register_setting();
 		$this->register_options();
-
-		foreach ( $this->tabs as $tab ) {
-			$tab->register();
-		}
 	}
 
 	/**
@@ -103,7 +99,7 @@ abstract class Settings extends Screen {
 					tablist.removeClass('active');
 					button.addClass('active');
 
-					$('.settings-tab-contents > div').hide();
+					$('.settings-tab-pages > div').hide();
 					$(target).show();
 
 					return false;
@@ -123,10 +119,10 @@ abstract class Settings extends Screen {
 	 */
 	public function add_tab( $args ): Tab {
 		$args['page'] = $this->get_option_name();
-		$tabs         = new Tab( $args );
-		$this->tabs[] = $tabs;
+		$tab          = new Tab( $args );
+		$this->tabs[] = $tab;
 
-		return $tabs;
+		return $tab;
 	}
 
 	/**

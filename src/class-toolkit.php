@@ -379,13 +379,8 @@ class Toolkit {
 
 		if ( isset( $input_ids[ $input_id ] ) ) {
 			unset( $input_ids[ $input_id ] );
-			?>
-				<?php if ( $args['description'] ) : ?>
-					<p class="awesome9-form__help"><?php echo $args['description']; // phpcs:ignore ?></p>
-					<?php endif; ?>
-				</div>
-			</div>
-			<?php
+			static::input_description( $args, 'right' );
+			echo '</div></div>'; // phpcs:ignore
 			return;
 		}
 
@@ -393,12 +388,36 @@ class Toolkit {
 
 		$wrap_classnames = HTML::classnames( 'awesome9-form__row', $args['wrapper_class'] );
 		?>
-		<div class="<?php echo $wrap_classnames; // phpcs:ignore ?>">
+		<div id="<?php echo $args['wrapper_id'] ?? ''; ?>" class="<?php echo $wrap_classnames; // phpcs:ignore ?>">
 			<div class="awesome9-form__label">
 				<label for="<?php echo esc_attr( $args['id'] ); ?>"><?php echo esc_html( $label ); ?></label>
+				<?php static::input_description( $args, 'left' ); ?>
 			</div>
 			<div class="awesome9-form__input-wrap">
 		<?php
+	}
+
+	/**
+	 * Display an input description.
+	 *
+	 * @param array  $args  The input arguments.
+	 * @param string $where The position of the description (Optional).
+	 *
+	 * @return void
+	 */
+	private static function input_description( $args, $where = 'right' ): void {
+		if (
+			( ! isset( $args['pos_desc'] ) && 'right' !== $where ) ||
+			( isset( $args['pos_desc'] ) && $args['pos_desc'] !== $where )
+		) {
+			return;
+		}
+
+		if ( $args['description'] ) {
+			?>
+			<p class="awesome9-form__help"><?php echo $args['description']; // phpcs:ignore ?></p>
+			<?php
+		}
 	}
 
 	/* CSS State using checkbox and radio buttons --------*/
