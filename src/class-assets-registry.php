@@ -78,7 +78,7 @@ abstract class Assets_Registry implements Integration_Interface {
 			switch ( $action ) {
 				case 'register':
 					$func_args[] = $this->resolve_url( $arguments[1] );
-					$func_args[] = is_array( $arguments[2] ) && ! empty( $arguments[2] )
+					$func_args[] = isset( $arguments[2] ) && is_array( $arguments[2] ) && ! empty( $arguments[2] )
 						? array_map( [ $this, 'prefix_dep' ], $arguments[2] ) : [];
 					$func_args[] = isset( $arguments[3] ) && ! empty( $arguments[3] ) ? $arguments[3] : $this->get_version();
 					$func_args[] = $arguments[4] ?? ( 'script' === $type ? true : 'all' );
