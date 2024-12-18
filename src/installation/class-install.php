@@ -48,7 +48,7 @@ abstract class Install implements Initializer_Interface {
 	 *
 	 * @return void
 	 */
-	public function activation( $network_wide = false ): void {
+	public function activation( bool $network_wide = false ): void {
 		register_uninstall_hook( $this->get_base_file(), [ static::class, 'uninstall' ] );
 
 		if ( ! is_multisite() || ! $network_wide ) {
@@ -66,7 +66,7 @@ abstract class Install implements Initializer_Interface {
 	 *
 	 * @return void
 	 */
-	public function deactivation( $network_wide = false ): void {
+	public function deactivation( bool $network_wide = false ): void {
 		if ( ! is_multisite() || ! $network_wide ) {
 			$this->deactivate();
 			return;
@@ -95,7 +95,7 @@ abstract class Install implements Initializer_Interface {
 	 *
 	 * @return void
 	 */
-	private function network_activate_deactivate( $action ): void {
+	private function network_activate_deactivate( string $action ): void {
 		$site_ids = WordPress::get_sites();
 
 		if ( empty( $site_ids ) ) {

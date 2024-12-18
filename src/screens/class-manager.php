@@ -21,9 +21,9 @@ abstract class Manager implements Integration_Interface {
 	/**
 	 * Registered screens.
 	 *
-	 * @var array
+	 * @var Screen[]
 	 */
-	private $screens = [];
+	private array $screens = [];
 
 	/**
 	 * Screen IDs mapped to their hooks.
@@ -78,7 +78,7 @@ abstract class Manager implements Integration_Interface {
 	 *
 	 * @return void
 	 */
-	abstract public function render_tab_content( $active, $tab, $args ): void;
+	abstract public function render_tab_content( string $active, array $tab, array $args ): void;
 
 	/**
 	 * Add administration pages to the WordPress Dashboard menu.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Section class.
+ * Section class for managing settings sections.
  *
  * @package Awesome9\Framework
  * @author  Awesome9 <info@awesome9.co>
@@ -13,38 +13,41 @@ use Awesome9\Framework\Traits\Arguments;
 use Awesome9\Framework\Utilities\HTML;
 
 /**
- * Section class.
+ * Represents a settings section in the WordPress admin.
  */
 class Section {
 
 	use Arguments;
 
 	/**
-	 * Fields.
+	 * Fields within the section.
 	 *
-	 * @var array
+	 * @var Field[]
 	 */
-	private $fields = [];
+	private array $fields = [];
 
 	/**
 	 * Constructor.
 	 *
 	 * @param array $args The section arguments.
+	 *
+	 * @throws \InvalidArgumentException If required arguments are missing.
 	 */
-	public function __construct( $args ) {
+	public function __construct( array $args ) {
 		$this->args = $args;
+		$this->validate_args();
 		$this->set_defaults();
 		$this->register();
 	}
 
 	/**
-	 * Adds fields to the section.
+	 * Add a field to the section.
 	 *
 	 * @param array $args The field arguments.
 	 *
-	 * @return Section
+	 * @return self
 	 */
-	public function add_field( $args ): Section {
+	public function add_field( array $args ): self {
 		$args = wp_parse_args(
 			$args,
 			[
@@ -70,7 +73,7 @@ class Section {
 	}
 
 	/**
-	 * Set the default arguments.
+	 * Set default arguments for the section.
 	 *
 	 * @return void
 	 */
@@ -88,16 +91,32 @@ class Section {
 	}
 
 	/**
-	 * Register the section into WordPress.
+	 * Register the section with WordPress.
 	 *
 	 * @return void
 	 */
-	private function register() {
+	private function register(): void {
 		\add_settings_section(
 			$this->get( 'id' ),
 			$this->get( 'title' ),
 			null,
 			$this->get( 'page' )
 		);
+	}
+
+	/**
+	 * Validate required section arguments.
+	 *
+	 * @return void
+	 *
+	 * @throws \InvalidArgumentException If required arguments are missing.
+	 */
+	private function validate_args(): void {
+		$required = [ 'id', 'title', 'page' ];
+		foreach ( $required as $key ) {
+			if ( empty( $this->args[ $key ] ) ) {
+				throw new \InvalidArgumentException( sprintf( 'Missing required argument: %s', $key ) ); // phpcs:ignore
+			}
+		}
 	}
 }

@@ -24,14 +24,14 @@ abstract class Screen {
 	 *
 	 * @var string
 	 */
-	private $hook = '';
+	private string $hook = '';
 
 	/**
 	 * List of tabs for the screen.
 	 *
 	 * @var array
 	 */
-	private $tabs = [];
+	private array $tabs = [];
 
 	/**
 	 * Reference to the screen manager.
@@ -45,7 +45,7 @@ abstract class Screen {
 	 *
 	 * @param Manager $manager Instance of the Manager class.
 	 */
-	public function __construct( $manager ) {
+	public function __construct( Manager $manager ) {
 		$this->manager = $manager;
 	}
 
@@ -67,7 +67,7 @@ abstract class Screen {
 	 *
 	 * @return void
 	 */
-	public function set_hook( $hook ): void {
+	public function set_hook( string $hook ): void {
 		$this->hook = $hook;
 	}
 
@@ -128,7 +128,7 @@ abstract class Screen {
 	 *
 	 * @return void
 	 */
-	public function set_tabs( $tabs ): void {
+	public function set_tabs( array $tabs ): void {
 		$this->tabs = $tabs;
 	}
 
@@ -138,7 +138,7 @@ abstract class Screen {
 	 * @return string Active tab ID.
 	 */
 	public function get_current_tab_id(): string {
-		$first = key( $this->tabs );
+		$first = array_key_first( $this->tabs );
 
 		return Params::get( 'sub_page', $first );
 	}
@@ -150,7 +150,7 @@ abstract class Screen {
 	 *
 	 * @return void
 	 */
-	public function get_tabs_menu( $args = [] ): void {
+	public function get_tabs_menu( array $args = [] ): void {
 		Toolkit::tabs( $this->get_tabs(), $this->get_current_tab_id(), ...$args );
 	}
 
@@ -161,7 +161,7 @@ abstract class Screen {
 	 *
 	 * @return void
 	 */
-	public function get_tab_content( $args = [] ): void {
+	public function get_tab_content( array $args = [] ): void {
 		$active = $this->get_current_tab_id();
 		$tab    = $this->get_tabs()[ $active ];
 

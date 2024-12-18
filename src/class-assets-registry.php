@@ -17,6 +17,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Assets Registry.
  *
+ * This class abstracts the process of registering, enqueuing, dequeuing, deregistering, and inline scripting or styling
+ * for assets like CSS and JavaScript.
+ *
  * Script functions:
  *
  * @method void enqueue_script(string $handle)
@@ -41,21 +44,21 @@ abstract class Assets_Registry implements Integration_Interface {
 	/**
 	 * Base URL for plugin local assets.
 	 *
-	 * @return string
+	 * @return string Base URL for assets.
 	 */
 	abstract public function get_base_url(): string;
 
 	/**
 	 * Prefix to use in handle to make it unique.
 	 *
-	 * @return string
+	 * @return string Prefic for assets.
 	 */
 	abstract public function get_prefix(): string;
 
 	/**
 	 * Version for plugin local assets.
 	 *
-	 * @return string
+	 * @return string Version of the assets.
 	 */
 	abstract public function get_version(): string;
 
@@ -65,7 +68,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @param string $name      The name of the method.
 	 * @param array  $arguments The arguments passed to the method.
 	 *
-	 * @return mixed
+	 * @return mixed The result of the action or null if the function does not exist.
 	 */
 	public function __call( $name, $arguments ) {
 		if ( preg_match( '/^(enqueue|dequeue|register|deregister|is|inline|localize)_(script|style)$/', $name, $matches ) ) {
@@ -120,7 +123,7 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Register assets
+	 * Register assets for both scripts and styles.
 	 *
 	 * @return void
 	 */
@@ -130,41 +133,41 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Prefix the handle
+	 * Prefix the handle to ensure asset uniqueness.
 	 *
 	 * @param string $handle Name of the asset.
 	 *
-	 * @return string
+	 * @return string Prefixed handle.
 	 */
 	public function prefix_it( $handle ): string {
 		return $this->get_prefix() . '-' . $handle;
 	}
 
 	/**
-	 * Register styles
+	 * Register styles.
 	 *
 	 * @return void
 	 */
 	public function register_styles(): void {}
 
 	/**
-	 * Register scripts
+	 * Register scripts.
 	 *
 	 * @return void
 	 */
 	public function register_scripts(): void {}
 
 	/**
-	 * Resolves the URL.
+	 * Resolves the URL for an asset.
 	 *
-	 * If the provided URL is an absolute URL or protocol-relative URL, it is returned as is.
+	 * If the provided URL is an absolute URL or protocol-relative, it is returned as-is.
 	 * Otherwise, the base URL is prepended to the relative path.
 	 *
-	 * @param string $src The source URL.
+	 * @param string $src The asset source URL.
 	 *
 	 * @return string The resolved URL.
 	 */
-	private function resolve_url( $src ): string {
+	private function resolve_url( string $src ): string {
 		if ( preg_match( '/^(https?:)?\/\//', $src ) ) {
 			return $src;
 		}
@@ -173,11 +176,11 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Resolves the function name.
+	 * Resolves the WordPress function name for a specific asset action.
 	 *
-	 * @param string $name The name of the function.
+	 * @param string $name The name of the action (e.g., register_script).
 	 *
-	 * @return string
+	 * @return string The corresponding WordPress function name.
 	 */
 	private function resolve_function( $name ): string {
 		$method_map = [
@@ -193,11 +196,11 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Prefix the dependency
+	 * Prefix the dependency to ensure it's uniquely identified.
 	 *
-	 * @param string $dep Name of the dependency.
+	 * @param string $dep Dependency handle.
 	 *
-	 * @return string
+	 * @return string Prefixed dependency handle.
 	 */
 	private function prefix_dep( $dep ): string {
 		if ( Str::starts_with( '_pre_', $dep ) ) {

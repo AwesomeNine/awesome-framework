@@ -9,45 +9,46 @@
 
 namespace Awesome9\Framework\Options;
 
+use Awesome9\Framework\Utilities\HTML;
 use Awesome9\Framework\Utilities\Params;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Option_Page class
+ * Manages option pages and their tabs.
  */
-class Option_Page {
+class Options_Page {
 
 	/**
-	 * Option page tabs.
+	 * Tabs for the option page.
 	 *
 	 * @var array
 	 */
-	private $tabs = [];
+	private array $tabs = [];
 
 	/**
-	 * Add tab.
+	 * Add a tab to the options page.
 	 *
-	 * @param string $slug Tab slug.
-	 * @param array  $args Tab arguments.
+	 * @param string $slug Unique slug for the tab.
+	 * @param array  $args Arguments for the tab (title, icon, template, etc.).
 	 *
 	 * @return void
 	 */
-	public function add_tab( $slug, $args ) {
+	public function add_tab( string $slug, array $args ): void {
 		$this->tabs[ $slug ] = $args;
 	}
 
 	/**
-	 * Get tabs.
+	 * Retrieve all tabs.
 	 *
-	 * @return array
+	 * @return array List of tabs.
 	 */
-	public function get_tabs() {
+	public function get_tabs(): array {
 		return $this->tabs;
 	}
 
 	/**
-	 * Render option page.
+	 * Render the entire options page.
 	 *
 	 * @return void
 	 */
@@ -56,7 +57,7 @@ class Option_Page {
 	}
 
 	/**
-	 * Render tabs navigantion.
+	 * Render the tabs navigation menu.
 	 *
 	 * @return void
 	 */
@@ -67,12 +68,20 @@ class Option_Page {
 		<div class="awesome9-tab-nav space-y-2">
 			<?php
 			foreach ( $tabs as $slug => $tab ) :
-				$active_class = $active_tab === $slug ? 'is-active bg-white text-blue-700' : '';
-				$icon_class = $active_tab === $slug ? ' text-blue-700' : '';
+				$is_current = $active_tab === $slug;
+				$tab_class  = HTML::classnames(
+					'flex items-center text-base no-underline py-2 px-5 rounded-md text-gray-700',
+					[ 'is-active bg-white text-blue-700' => $is_current ]
+				);
+				$icon_class = HTML::classnames(
+					'text-icons mt-0.5',
+					$tab['icon'],
+					[ 'text-blue-700' => $is_current ]
+				);
 				?>
 				<div class="awesome9-tab-nav-item">
-					<a href="#<?php echo esc_attr( $slug ); ?>" class="flex items-center text-base no-underline py-2 px-5 rounded-md text-gray-700 <?php echo esc_attr( $active_class ); ?>" data-tab="<?php echo esc_attr( $slug ); ?>">
-						<span class="text-icons mt-0.5 <?php echo esc_attr( $tab['icon'] . $icon_class  ); ?>" area-hidden="true"></span>
+					<a href="#<?php echo esc_attr( $slug ); ?>" class="<?php echo esc_attr( $tab_class ); ?>" data-tab="<?php echo esc_attr( $slug ); ?>">
+						<span class="<?php echo esc_attr( $icon_class ); ?>" area-hidden="true"></span>
 						<span class="ml-3 d-none d-lg-block flex-1">
 							<?php echo esc_html( $tab['title'] ); ?>
 						</span>
@@ -86,7 +95,7 @@ class Option_Page {
 	}
 
 	/**
-	 * Render tab content.
+	 * Render the content for all tabs.
 	 *
 	 * @return void
 	 */
@@ -95,7 +104,7 @@ class Option_Page {
 		$active_tab = $this->get_active_tab();
 
 		foreach ( $tabs as $slug => $tab ) {
-			$active_class = $active_tab == $slug ? ' is-active' : '';
+			$active_class = $active_tab === $slug ? ' is-active' : '';
 			?>
 			<div id="<?php echo esc_attr( $slug ); ?>" class="awesome9-tab-content<?php echo esc_attr( $active_class ); ?>">
 			<?php require $this->get_view( 'blocks/' . $tab['template'] ); ?>
@@ -105,20 +114,20 @@ class Option_Page {
 	}
 
 	/**
-	 * Get view file path.
+	 * Get the file path for a view template.
 	 *
-	 * @param string $template Template name.
+	 * @param string $template Name of the template file.
 	 *
-	 * @return void
+	 * @return string Path to the view file or null if it doesn't exist.
 	 */
-	private function get_view( $template ): string {
+	private function get_view( string $template ): string {
 		return __DIR__ . '/views/' . $template . '.php';
 	}
 
 	/**
-	 * Get active tab.
+	 * Retrieve the currently active tab.
 	 *
-	 * @return string
+	 * @return string The slug of the active tab.
 	 */
 	private function get_active_tab(): string {
 		$tabs = array_keys( $this->get_tabs() );

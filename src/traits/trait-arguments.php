@@ -11,13 +11,16 @@ namespace Awesome9\Framework\Traits;
 
 use Awesome9\Framework\Utilities\Arr;
 
+/**
+ * Provides methods to manage and retrieve arguments.
+ */
 trait Arguments {
 	/**
 	 * Tab arguments.
 	 *
 	 * @var array
 	 */
-	private $args = [];
+	private array $args = [];
 
 	/**
 	 * Retrieve a value from the arguments array.
@@ -27,7 +30,7 @@ trait Arguments {
 	 *
 	 * @return mixed The value from the arguments array if the key exists, otherwise the default value.
 	 */
-	public function get( $key, $default = null ) {
+	public function get( string $key, $default = null ) {
 		return Arr::get( $this->args, $key, $default );
 	}
 
@@ -39,7 +42,7 @@ trait Arguments {
 	 *
 	 * @return void
 	 */
-	public function set( $key, $value ): void {
+	public function set( string $key, $value ): void {
 		Arr::set( $this->args, $key, $value );
 	}
 }

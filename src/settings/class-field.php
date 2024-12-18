@@ -1,6 +1,6 @@
 <?php
 /**
- * Field class.
+ * Field class for managing settings fields.
  *
  * @package Awesome9\Framework
  * @author  Awesome9 <info@awesome9.co>
@@ -10,11 +10,11 @@
 namespace Awesome9\Framework\Settings;
 
 use Awesome9\Framework\Toolkit;
-use Awesome9\Framework\Traits\Arguments;
 use Awesome9\Framework\Utilities\HTML;
+use Awesome9\Framework\Traits\Arguments;
 
 /**
- * Field class.
+ * Represents a settings field in the admin settings page.
  */
 class Field {
 
@@ -23,16 +23,19 @@ class Field {
 	/**
 	 * Constructor.
 	 *
-	 * @param array $args The section arguments.
+	 * @param array $args The field arguments.
+	 *
+	 * @throws \InvalidArgumentException If required arguments are missing.
 	 */
-	public function __construct( $args ) {
+	public function __construct( array $args ) {
 		$this->args = $args;
+		$this->validate_args();
 		$this->set_defaults();
 		$this->register();
 	}
 
 	/**
-	 * Render the tab.
+	 * Render the field.
 	 *
 	 * @return void
 	 */
@@ -48,7 +51,7 @@ class Field {
 	}
 
 	/**
-	 * Register the sections.
+	 * Register the field with WordPress settings API.
 	 *
 	 * @return void
 	 */
@@ -64,7 +67,23 @@ class Field {
 	}
 
 	/**
-	 * Set the default arguments.
+	 * Validate required arguments.
+	 *
+	 * @return void
+	 *
+	 * @throws \InvalidArgumentException If required arguments are missing.
+	 */
+	private function validate_args(): void {
+		$required = [ 'id', 'title', 'type', 'page', 'section' ];
+		foreach ( $required as $key ) {
+			if ( empty( $this->args[ $key ] ) ) {
+				throw new \InvalidArgumentException( sprintf( 'Missing required argument: %s', $key ) ); // phpcs:ignore
+			}
+		}
+	}
+
+	/**
+	 * Set default arguments for the field.
 	 *
 	 * @return void
 	 */
@@ -73,31 +92,13 @@ class Field {
 			$this->args,
 			[
 				'pos_desc'      => 'left',
-				'wrapper_id'    => $this->get_wrapper_id(),
-				'wrapper_class' => $this->get_wrapper_class(),
+				'wrapper_id'    => 'option-id-' . $this->get( 'id' ),
+				'wrapper_class' => HTML::classnames(
+					'settings-option-field',
+					'option-type-' . $this->get( 'type' ),
+					$this->get( 'wrapper-classnames' )
+				),
 			]
-		);
-	}
-
-	/**
-	 * Get the wrapper ID.
-	 *
-	 * @return string
-	 */
-	private function get_wrapper_id(): string {
-		return 'option-id-' . $this->get( 'id' );
-	}
-
-	/**
-	 * Get the wrapper class.
-	 *
-	 * @return string
-	 */
-	private function get_wrapper_class(): string {
-		return HTML::classnames(
-			'settings-option-field',
-			'option-type-' . $this->get( 'type' ),
-			$this->get( 'wrapper-classnames' )
 		);
 	}
 }

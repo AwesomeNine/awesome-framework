@@ -1,6 +1,6 @@
 <?php
 /**
- * Setting class.
+ * Setting class for managing WordPress admin settings screens.
  *
  * @package Awesome9\Framework
  * @author  Awesome9 <info@awesome9.co>
@@ -17,37 +17,39 @@ use Awesome9\Framework\Screens\Screen;
 abstract class Settings extends Screen {
 
 	/**
-	 * Tabs.
+	 * Tabs registered for the settings screen.
 	 *
-	 * @var array
+	 * @var Tab[]
 	 */
-	protected $tabs = [];
+	protected array $tabs = [];
 
 	/**
-	 * Get option name.
+	 * Get the option name for the settings.
 	 *
-	 * @return string
+	 * @return string The option name.
 	 */
 	abstract public function get_option_name(): string;
 
 	/**
-	 * Register the options
+	 * Register options for the settings.
 	 *
 	 * @return void
 	 */
 	abstract public function register_options(): void;
 
 	/**
-	 * Defines the configuration settings.
+	 * Define the configuration settings.
 	 *
-	 * @return array An array representing the configuration settings.
+	 * Override this method to provide specific settings configuration.
+	 *
+	 * @return array Configuration settings.
 	 */
 	public function define_configuration(): array {
 		return [];
 	}
 
 	/**
-	 * Register screen into WordPress admin area.
+	 * Register the screen in the WordPress admin area.
 	 *
 	 * @return void
 	 */
@@ -57,7 +59,7 @@ abstract class Settings extends Screen {
 	}
 
 	/**
-	 * Register the tabs, sections and settings.
+	 * Register the settings, tabs, and options.
 	 *
 	 * @return void
 	 */
@@ -67,23 +69,26 @@ abstract class Settings extends Screen {
 	}
 
 	/**
-	 * Registers the settings with the specified configuration.
+	 * Register the settings with the specified configuration.
 	 *
 	 * @return void
 	 */
 	public function register_setting() {
 		$args = $this->define_configuration();
 
+		// Ensure arguments are always an array.
 		if ( ! is_array( $args ) ) {
 			$args = [];
 		}
 
-		$args['sanitize_callback'] = [ $this, 'sanitize' ];
+		// Add a default sanitize callback if none exists.
+		$args['sanitize_callback'] = $args['sanitize_callback'] ?? [ $this, 'sanitize' ];
+
 		register_setting( $this->get_option_name(), $this->get_option_name(), $args );
 	}
 
 	/**
-	 * Enqueue JavaScript
+	 * Enqueue JavaScript for tab switching functionality.
 	 *
 	 * @return void
 	 */
@@ -92,6 +97,7 @@ abstract class Settings extends Screen {
 		<script>
 			jQuery(document).ready(function($) {
 				const tablist = $('a', '.settings-tablist');
+
 				tablist.on( 'click', function() {
 					const button = $(this);
 					const target = button.attr('href');
@@ -111,11 +117,11 @@ abstract class Settings extends Screen {
 	}
 
 	/**
-	 * Add tab.
+	 * Add a tab to the settings screen.
 	 *
 	 * @param array $args The tab arguments.
 	 *
-	 * @return Tab
+	 * @return Tab The created tab instance.
 	 */
 	public function add_tab( $args ): Tab {
 		$args['page'] = $this->get_option_name();
@@ -126,7 +132,7 @@ abstract class Settings extends Screen {
 	}
 
 	/**
-	 * Display screen content.
+	 * Display the settings screen content.
 	 *
 	 * @return void
 	 */
