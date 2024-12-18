@@ -15,26 +15,26 @@ use Awesome9\Framework\Utilities\Params;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Abstracts Screen.
+ * Abstract Screen class for managing admin screens in WordPress.
  */
 abstract class Screen {
 
 	/**
-	 * Hold hook.
+	 * The hook assigned to the screen.
 	 *
 	 * @var string
 	 */
 	private $hook = '';
 
 	/**
-	 * Hold tabs.
+	 * List of tabs for the screen.
 	 *
 	 * @var array
 	 */
 	private $tabs = [];
 
 	/**
-	 * Hold manager.
+	 * Reference to the screen manager.
 	 *
 	 * @var Manager
 	 */
@@ -43,7 +43,7 @@ abstract class Screen {
 	/**
 	 * Screen constructor.
 	 *
-	 * @param object $manager Manager object.
+	 * @param Manager $manager Instance of the Manager class.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -52,18 +52,18 @@ abstract class Screen {
 	/* Page Hook ------------------- */
 
 	/**
-	 * Get the hook.
+	 * Get the screen hook.
 	 *
-	 * @return string
+	 * @return string Hook assigned to the screen.
 	 */
 	public function get_hook(): string {
 		return $this->hook;
 	}
 
 	/**
-	 * Set the hook.
+	 * Set the screen hook.
 	 *
-	 * @param string $hook Hook to set.
+	 * @param string $hook Hook to be set for the screen.
 	 *
 	 * @return void
 	 */
@@ -74,37 +74,37 @@ abstract class Screen {
 	/* Screen API ------------------- */
 
 	/**
-	 * Screen unique id.
+	 * Get the unique identifier for the screen.
 	 *
-	 * @return string
+	 * @return string Unique screen ID.
 	 */
 	abstract public function get_id(): string;
 
 	/**
-	 * Register screen into WordPress admin area.
+	 * Register the screen in the WordPress admin area.
 	 *
 	 * @return void
 	 */
 	abstract public function register_screen(): void;
 
 	/**
-	 * Enqueue assets
+	 * Enqueue assets such as scripts or styles for the screen.
 	 *
 	 * @return void
 	 */
 	public function enqueue_assets(): void {}
 
 	/**
-	 * Display screen content.
+	 * Display the content of the screen.
 	 *
 	 * @return void
 	 */
 	public function display(): void {}
 
 	/**
-	 * Get the order value.
+	 * Get the order of the screen.
 	 *
-	 * @return int The order value, which is 10.
+	 * @return int Order value for the screen. Default is 10.
 	 */
 	public function get_order(): int {
 		return 10;
@@ -113,18 +113,18 @@ abstract class Screen {
 	/* Tabs API ------------------- */
 
 	/**
-	 * Get the tabs.
+	 * Get the tabs defined for the screen.
 	 *
-	 * @return array
+	 * @return array List of tabs.
 	 */
 	public function get_tabs(): array {
 		return $this->tabs;
 	}
 
 	/**
-	 * Set the tabs.
+	 * Set the tabs for the screen.
 	 *
-	 * @param array $tabs Array of screen tabs.
+	 * @param array $tabs Array of tabs to set.
 	 *
 	 * @return void
 	 */
@@ -133,20 +133,20 @@ abstract class Screen {
 	}
 
 	/**
-	 * Get current tab id.
+	 * Get the current active tab ID.
 	 *
-	 * @return string
+	 * @return string Active tab ID.
 	 */
 	public function get_current_tab_id(): string {
-		$first = current( array_keys( $this->tabs ) );
+		$first = key( $this->tabs );
 
 		return Params::get( 'sub_page', $first );
 	}
 
 	/**
-	 * Render tabs menu
+	 * Render the tabs menu.
 	 *
-	 * @param array $args Arguments to be used in the template.
+	 * @param array $args Arguments for rendering the menu.
 	 *
 	 * @return void
 	 */
@@ -155,9 +155,9 @@ abstract class Screen {
 	}
 
 	/**
-	 * Render tabs content
+	 * Render the content of the current tab.
 	 *
-	 * @param array $args Arguments to be used in the template.
+	 * @param array $args Arguments for rendering the tab content.
 	 *
 	 * @return void
 	 */
@@ -171,21 +171,22 @@ abstract class Screen {
 	/* Header API ------------------- */
 
 	/**
-	 * Get page header arguments
+	 * Define the arguments for the screen header.
 	 *
-	 * @return array
+	 * @return array Associative array of header arguments.
 	 */
 	public function define_header_args(): array {
 		return [];
 	}
 
 	/**
-	 * Get page header arguments
+	 * Get the parsed arguments for the screen header.
 	 *
-	 * @return array
+	 * @return array Parsed header arguments.
 	 */
 	public function get_header_args(): array {
 		$wp_screen = get_current_screen();
+
 		return wp_parse_args(
 			$this->define_header_args(),
 			[

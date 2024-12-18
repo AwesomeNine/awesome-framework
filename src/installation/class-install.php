@@ -21,9 +21,9 @@ defined( 'ABSPATH' ) || exit;
 abstract class Install implements Initializer_Interface {
 
 	/**
-	 * Plugin base file
+	 * Get the base file of the plugin.
 	 *
-	 * @var string
+	 * @return string Plugin base file path.
 	 */
 	abstract protected function get_base_file(): string;
 
@@ -96,8 +96,6 @@ abstract class Install implements Initializer_Interface {
 	 * @return void
 	 */
 	private function network_activate_deactivate( $action ): void {
-		global $wpdb;
-
 		$site_ids = WordPress::get_sites();
 
 		if ( empty( $site_ids ) ) {

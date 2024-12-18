@@ -1,6 +1,6 @@
 <?php
 /**
- * Screen Manager class.
+ * Manages screens and integrates them into the WordPress admin interface.
  *
  * @package Awesome9\Framework
  * @author  Awesome9 <info@awesome9.co>
@@ -14,19 +14,19 @@ use Awesome9\Framework\Interfaces\Integration_Interface;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Manager class.
+ * Abstract Manager class for managing admin screens.
  */
 abstract class Manager implements Integration_Interface {
 
 	/**
-	 * Hold screens
+	 * Registered screens.
 	 *
 	 * @var array
 	 */
 	private $screens = [];
 
 	/**
-	 * Hold screen hooks
+	 * Screen IDs mapped to their hooks.
 	 *
 	 * @var array
 	 */
@@ -45,7 +45,7 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Define the body class for the plugin.
+	 * Define the custom body class for plugin screens.
 	 *
 	 * @since 1.0.0
 	 *
@@ -63,7 +63,14 @@ abstract class Manager implements Integration_Interface {
 	abstract protected function define_screens(): void;
 
 	/**
-	 * Render tab content
+	 * Define the hook prefix for the plugin.
+	 *
+	 * @return string
+	 */
+	abstract protected function define_hook_prefix(): string;
+
+	/**
+	 * Render content for a specific tab.
 	 *
 	 * @param string $active Active tab.
 	 * @param array  $tab    Tab object.
@@ -74,7 +81,7 @@ abstract class Manager implements Integration_Interface {
 	abstract public function render_tab_content( $active, $tab, $args ): void;
 
 	/**
-	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
+	 * Add administration pages to the WordPress Dashboard menu.
 	 *
 	 * @since 1.0.0
 	 *
@@ -88,9 +95,9 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Add a custom class to the body tag of Advanced Ads screens.
+	 * Add a custom class to the body tag of plugin screens.
 	 *
-	 * @param string $classes Space-separated class list.
+	 * @param string $classes Space-separated list of classes.
 	 *
 	 * @return string
 	 */
@@ -103,7 +110,7 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Enqueue styles and scripts for current screen
+	 * Enqueue styles and scripts for the current screen.
 	 *
 	 * @return void
 	 */
@@ -111,37 +118,38 @@ abstract class Manager implements Integration_Interface {
 		if ( $this->is_screen() ) {
 			$screen = $this->get_current_screen();
 			$screen->enqueue_assets();
-			do_action( 'advanced-ads-screen-' . $screen->get_id(), $screen );
+			do_action( $this->define_hook_prefix() . '-screen-' . $screen->get_id(), $screen );
 		}
 	}
 
 	/**
-	 * Add custom header to the plugin screens.
+	 * Define the custom header view file.
 	 *
-	 * @return string
+	 * @return string Path to the custom header view file.
 	 */
 	public function define_header_view(): string {
 		return '';
 	}
 
 	/**
-	 * Add plugin custom header.
+	 * Add a custom header to plugin screens.
 	 *
 	 * @return void
 	 */
 	public function add_custom_header(): void {
 		if ( $this->is_screen() && $this->define_header_view() ) {
 			$current_screen = $this->get_current_screen();
-			extract( $current_screen->get_header_args(), EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
-
-			include_once $this->define_header_view();
+			if ( $current_screen ) {
+				extract( $current_screen->get_header_args(), EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
+				include_once $this->define_header_view();
+			}
 		}
 	}
 
 	/**
-	 * Add a screen to the list of screens
+	 * Register a new screen.
 	 *
-	 * @param string $screen Screen class name.
+	 * @param string $screen Fully qualified class name of the screen.
 	 *
 	 * @return void
 	 */
@@ -152,7 +160,7 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Get screens
+	 * Retrieve all registered screens.
 	 *
 	 * @return array
 	 */
@@ -182,7 +190,7 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Get screen ids
+	 * Retrieve screen IDs mapped to hooks.
 	 *
 	 * @return array
 	 */
@@ -191,7 +199,7 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Check if the current screen is plugin screen.
+	 * Check if the current screen belongs to the plugin.
 	 *
 	 * @return bool
 	 */
@@ -200,9 +208,9 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
-	 * Get current screen
+	 * Retrieve the current screen instance.
 	 *
-	 * @return null|Screen
+	 * @return null|Screen The current screen instance or null if not applicable.
 	 */
 	public function get_current_screen() {
 		$screen_id = $this->get_screen_ids()[ get_current_screen()->id ] ?? null;
