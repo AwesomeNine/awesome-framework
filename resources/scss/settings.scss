@@ -25,11 +25,11 @@
 			}
 
 			&.active {
-				@apply text-wordpress bg-white rounded border border-black/15;
+				@apply text-primary bg-white rounded border border-black/15;
 			}
 
 			&:hover {
-				@apply text-wordpress;
+				@apply text-primary;
 			}
 		}
 	}
@@ -82,7 +82,7 @@
 	.awesome9-form {
 		&__row {
 			@apply mb-2 px-6 py-5;
-			@apply border border-primary/80 bg-white rounded-md  items-center justify-between;
+			@apply border border-primary border-opacity-80 bg-white rounded-md  items-center justify-between;
 		}
 
 		&__label {
@@ -98,6 +98,6 @@
 .option-group-tmpl-merged {
 	.settings-option-group-items {
 		@apply px-6 divide-y divide-primary;
-		@apply border border-primary/80 bg-white rounded-md items-center justify-between;
+		@apply border border-primary border-opacity-80 bg-white rounded-md items-center justify-between;
 	}
 }

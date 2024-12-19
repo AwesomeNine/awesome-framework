@@ -105,7 +105,7 @@
 		}
 
 		&__button {
-			@apply flex items-center justify-center w-28 h-9 px-2 bg-wordpress rounded-full shadow text-white text-xs font-semibold cursor-pointer focus:outline-none;
+			@apply flex items-center justify-center w-28 h-9 px-2 bg-primary rounded-full shadow text-white text-xs font-semibold cursor-pointer focus:outline-none;
 		}
 	}
 

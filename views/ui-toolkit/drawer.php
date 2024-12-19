@@ -16,7 +16,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		'button_label'       => 'OPEN MENU',
-		'button_classnames'  => 'awesome9-button awesome9-button__primary',
+		'button_classnames'  => 'awesome9-button awesome9-button--primary',
 		'content_classnames' => 'border shadow-md',
 	]
 );
@@ -51,7 +51,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		\'button_label\'       => \'OPEN MENU\',
-		\'button_classnames\'  => \'awesome9-button awesome9-button__primary\',
+		\'button_classnames\'  => \'awesome9-button awesome9-button--primary\',
 		\'content_classnames\' => \'border shadow-md\',
 	]
 );
@@ -68,7 +68,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		'button_label'       => 'OPEN MENU',
-		'button_classnames'  => 'awesome9-button awesome9-button__primary',
+		'button_classnames'  => 'awesome9-button awesome9-button--primary',
 		'content_classnames' => 'drawer--sidebar shadow-lg shadow-gray-200',
 	]
 );
@@ -104,7 +104,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		\'button_label\'       => \'OPEN MENU\',
-		\'button_classnames\'  => \'awesome9-button awesome9-button__primary\',
+		\'button_classnames\'  => \'awesome9-button awesome9-button--primary\',
 		\'content_classnames\' => \'drawer--sidebar shadow-lg shadow-gray-200\',
 	]
 );
@@ -122,7 +122,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		'button_label'       => 'OPEN MENU',
-		'button_classnames'  => 'awesome9-button awesome9-button__primary',
+		'button_classnames'  => 'awesome9-button awesome9-button--primary',
 		'content_classnames' => 'border shadow-md',
 		'use_backdrop'       => true,
 	]
@@ -157,7 +157,7 @@ Toolkit::drawer(
 	$drawer_id,
 	[
 		\'button_label\'       => \'OPEN MENU\',
-		\'button_classnames\'  => \'awesome9-button awesome9-button__primary\',
+		\'button_classnames\'  => \'awesome9-button awesome9-button--primary\',
 		\'content_classnames\' => \'border shadow-md\',
 		\'use_backdrop\'       => true,
 	]

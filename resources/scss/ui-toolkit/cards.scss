@@ -3,7 +3,7 @@
 	@apply border border-solid border-primary bg-white;
 
 	> header {
-		@apply border-b border-primary bg-primary py-4 px-6 rounded-t-md;
+		@apply border-b border-primary bg-gray-100 py-4 px-6 rounded-t-md;
 
 		> :first-child {
 			@apply m-0;
@@ -11,7 +11,7 @@
 	}
 
 	> footer {
-		@apply border-t border-primary bg-primary py-4 px-6 rounded-b-md;
+		@apply border-t border-primary bg-gray-100 py-4 px-6 rounded-b-md;
 
 		:first-child {
 			@apply pt-0 mt-0;

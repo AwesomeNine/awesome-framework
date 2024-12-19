@@ -1,16 +1,16 @@
 .#{$namespace}-button {
-	@apply py-3 px-6 text-sm bg-gray-500 text-white rounded font-medium text-center shadow-sm tracking-wide;
+	@apply py-3 px-6 text-sm bg-gray-500 rounded font-medium text-center shadow-sm tracking-wide;
 	@apply cursor-pointer transition-all duration-500;
 	@apply hover:bg-gray-700;
 
 	&--primary {
-		@apply bg-wordpress text-white;
-		@apply hover:bg-wordpress-dark;
+		@apply bg-primary text-white;
+		@apply hover:bg-primary-hover;
 	}
 
 	&--secondary {
-		@apply bg-secondary text-black;
-		@apply hover:bg-wordpress hover:text-white;
+		@apply bg-gray-200;
+		@apply hover:bg-primary hover:text-white;
 	}
 
 	&--info {
@@ -24,7 +24,7 @@
 	}
 
 	&--warning {
-		@apply bg-yellow-500 text-white;
+		@apply bg-yellow-400;
 		@apply hover:bg-yellow-700;
 	}
 

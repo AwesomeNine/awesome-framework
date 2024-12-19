@@ -359,8 +359,12 @@ class Toolkit {
 	 *
 	 * @return string
 	 */
-	public static function get_svg( $file, $folder = 'vendor/awesome9/framework/resources/img/' ): string {
-		$file_url = AWESOME9_FRAMEWORK_BASE_URL . $folder . $file;
+	public static function get_svg( $file, $folder = '' ): string {
+		if ( '' === $folder ) {
+			$folder = dirname( __DIR__ ) . '/resources/img/';
+		}
+
+		$file_url = $folder . $file;
 
 		return file_get_contents( $file_url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 	}

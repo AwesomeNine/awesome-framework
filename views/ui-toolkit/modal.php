@@ -15,7 +15,7 @@ Toolkit::modal(
 	$modal_id,
 	[
 		'button_label'       => 'Launch it!',
-		'button_classnames'  => 'awesome9-button awesome9-button__primary',
+		'button_classnames'  => 'awesome9-button awesome9-button--primary',
 		'content_classnames' => 'drawer--sidebar shadow-lg shadow-gray-200',
 	]
 );
@@ -33,7 +33,7 @@ Toolkit::modal(
 	$modal_id,
 	[
 		'button_label'       => 'Launch it!',
-		'button_classnames'  => 'awesome9-button awesome9-button__primary',
+		'button_classnames'  => 'awesome9-button awesome9-button--primary',
 		'content_classnames' => 'drawer--sidebar shadow-lg shadow-gray-200',
 	]
 );

@@ -38,7 +38,7 @@ class Alerts {
 
 		if ( Str::is_non_empty( $icon ) && 'default' === $icon ) {
 			$icon = 'default' === $type ? 'info' : $type;
-			$icon = Toolkit::get_svg( "{$icon}.svg", 'resources/img/icons/' );
+			$icon = Toolkit::get_svg( "icons/{$icon}.svg" );
 		}
 
 		$classnames = HTML::classnames( 'awesome9-alert', 'awesome9-alert--' . $type, $classnames );

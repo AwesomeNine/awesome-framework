@@ -2,7 +2,7 @@
 	@apply relative flex flex-row border-b border-primary -mx-5 pt-8 pl-4;
 
 	a {
-		@apply text-base font-medium py-2 px-4 border border-primary border-b-0 border-r-0 no-underline bg-gray-200/50 text-gray-600;
+		@apply text-base font-medium py-2 px-4 border border-primary border-b-0 border-r-0 no-underline bg-gray-200 text-gray-600;
 
 		&:first-child {
 			@apply rounded-tl;
@@ -15,11 +15,12 @@
 		&:hover,
 		&:focus,
 		&.is-active {
-			@apply bg-primary shadow-none outline-none text-brand;
+			@apply bg-gray-100 shadow-none outline-none;
 		}
 
 		&.is-active {
-			border-bottom: 1px solid bg-primary;
+			// border-bottom: 1px solid;
+			@apply border-b border-b-gray-100;
 			margin-bottom: -1px;
 		}
 	}

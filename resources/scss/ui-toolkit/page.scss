@@ -17,8 +17,9 @@ html {
 	}
 }
 
-.#{$namespace}-page {
-	@apply bg-primary;
+.#{$namespace}-page,
+.awesome-toolkit-preview {
+	@apply bg-gray-100;
 
 	#wpfooter {
 		@apply bg-white p-5 border-t border-primary;

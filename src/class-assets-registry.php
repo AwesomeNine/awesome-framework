@@ -118,8 +118,37 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @return void
 	 */
 	public function hooks(): void {
+		add_action( 'admin_head', [ $this, 'enqueue_colors' ], 0 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ], 0 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ], 0 );
+	}
+
+	/**
+	 * Enqueue colors for the admin area.
+	 *
+	 * @return void
+	 */
+	public function enqueue_colors(): void {
+		static $awesome_colors = false;
+		// Early bail!!
+		if ( $awesome_colors ) {
+			return;
+		}
+		$awesome_colors = true;
+		?>
+		<style>
+			:root {
+				--awesome-color-primary: 110, 68, 255;
+				--awesome-color-primary-hover: 148, 122, 241;
+				--awesome-color-secondary: 65, 69, 79;
+				--awesome-color-info: 96, 165, 250;
+				--awesome-color-success: 16, 185, 129;
+				--awesome-color-warning: 250, 204, 21;
+				--awesome-color-danger: 244, 67, 55;
+				--awesome-border-color: 205, 207, 213;
+			}
+		</style>
+		<?php
 	}
 
 	/**

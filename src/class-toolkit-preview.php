@@ -51,6 +51,23 @@ class Toolkit_Preview extends Screen {
 		);
 		$this->set_hook( $hook );
 		$this->set_tabs( $this->initialize_tabs() );
+		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
+	}
+
+	/**
+	 * Add a custom class to the body tag of plugin screens.
+	 *
+	 * @param string $classes Space-separated list of classes.
+	 *
+	 * @return string
+	 */
+	public function add_body_class( string $classes ): string {
+		$wp_screen = get_current_screen();
+		if ( 'toplevel_page_toolkit-preview' === $wp_screen->id ) {
+			$classes .= ' awesome-toolkit-preview';
+		}
+
+		return $classes;
 	}
 
 	/**
