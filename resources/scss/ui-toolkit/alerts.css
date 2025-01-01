@@ -1,4 +1,4 @@
-.#{$namespace}-alert {
+.awesome9-alert {
 	@apply flex p-4 mb-8 text-sm text-gray-600 rounded-xl bg-gray-200/50 font-normal;
 
 	&__icon {
@@ -24,50 +24,50 @@
 	}
 }
 
-.#{$namespace}-alert--success {
+.awesome9-alert--success {
 	@apply border-emerald-500 bg-emerald-100;
 
 	header {
 		@apply text-emerald-500;
 	}
 
-	.#{$namespace}-alert__icon {
+	.awesome9-alert__icon {
 		@apply text-emerald-500;
 	}
 }
 
-.#{$namespace}-alert--info {
+.awesome9-alert--info {
 	@apply border-blue-500 bg-blue-100;
 
 	header {
 		@apply text-blue-500;
 	}
 
-	.#{$namespace}-alert__icon {
+	.awesome9-alert__icon {
 		@apply text-blue-500;
 	}
 }
 
-.#{$namespace}-alert--warning {
+.awesome9-alert--warning {
 	@apply border-yellow-400 bg-yellow-100/80;
 
 	header {
 		@apply text-yellow-400;
 	}
 
-	.#{$namespace}-alert__icon {
+	.awesome9-alert__icon {
 		@apply text-yellow-400;
 	}
 }
 
-.#{$namespace}-alert--error {
+.awesome9-alert--error {
 	@apply border-red-500 bg-red-100;
 
 	header {
 		@apply text-red-500;
 	}
 
-	.#{$namespace}-alert__icon {
+	.awesome9-alert__icon {
 		@apply text-red-500;
 	}
 }

@@ -17,7 +17,7 @@ html {
 	}
 }
 
-.#{$namespace}-page,
+.awesome9-page,
 .awesome-toolkit-preview {
 	@apply bg-gray-100;
 
@@ -25,7 +25,7 @@ html {
 		@apply bg-white p-5 border-t border-primary;
 	}
 
-	.#{$namespace}-notices {
+	.awesome9-notices {
 		.notice,
 		div.updated,
 		div.error {

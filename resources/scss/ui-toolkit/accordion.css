@@ -1,4 +1,4 @@
-.#{$namespace}-accordion-group {
+.awesome9-accordion-group {
 	@apply border border-primary bg-white rounded-md;
 
 	.accordion:last-child {

@@ -1,11 +1,11 @@
-.#{$namespace}-colors {
+.awesome9-colors {
 	@apply flex flex-wrap gap-12 text-center;
 
 	li {
 		@apply flex flex-col gap-y-2 tracking-wider;
 	}
 }
-.#{$namespace}-color {
+.awesome9-color {
 	@apply w-20 h-20 rounded-md block;
 
 	&--primary {

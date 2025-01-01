@@ -1,4 +1,4 @@
-.#{$namespace}-button {
+.awesome9-button {
 	@apply py-3 px-6 text-sm bg-gray-500 rounded font-medium text-center shadow-sm tracking-wide;
 	@apply cursor-pointer transition-all duration-500;
 	@apply hover:bg-gray-700;
@@ -52,7 +52,7 @@
 }
 
 .demo-buttons {
-	.#{$namespace}-button {
+	.awesome9-button {
 		@apply mr-4;
 	}
 }

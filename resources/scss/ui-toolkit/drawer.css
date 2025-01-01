@@ -1,4 +1,4 @@
-.#{$namespace}-drawer {
+.awesome9-drawer {
 	&__content {
 		@apply w-96 absolute left-0 top-0 pl-9 pr-3 overflow-y-auto transition-transform bg-white;
 		transform: translateX(-120%);
@@ -15,12 +15,12 @@
 }
 
 .drawer--sidebar {
-	&.#{$namespace}-drawer__content {
+	&.awesome9-drawer__content {
 		@apply fixed h-full left-auto top-8 right-0 px-9;
 		transform: translateX(120%);
 	}
 
-	.#{$namespace}-drawer {
+	.awesome9-drawer {
 		&__controller:checked ~ &__content {
 			transform: translateX(0);
 		}

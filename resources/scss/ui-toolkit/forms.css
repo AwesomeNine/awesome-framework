@@ -1,5 +1,5 @@
 /* stylelint-disable no-duplicate-selectors */
-.#{$namespace}-form {
+.awesome9-form {
 	&__row {
 		@apply flex flex-wrap items-start w-full p-4 box-border;
 	}
@@ -17,7 +17,7 @@
 	}
 }
 
-.#{$namespace}-form__row {
+.awesome9-form__row {
 	.input-text,
 	.input-textarea,
 	.input-select {

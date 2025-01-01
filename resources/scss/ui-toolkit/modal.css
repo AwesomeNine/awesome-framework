@@ -1,4 +1,4 @@
-.#{$namespace}-modal {
+.awesome9-modal {
 	@apply relative z-[10000];
 
 	&__overlay {

@@ -1,4 +1,4 @@
-.#{$namespace}-page {
+.awesome9-page {
 	#wpbody-content {
 		#screen-meta,
 		#screen-meta-links {
@@ -6,7 +6,7 @@
 		}
 	}
 
-	.#{$namespace}-header {
+	.awesome9-header {
 		#screen-meta {
 			@apply border-0 shadow-lg;
 		}

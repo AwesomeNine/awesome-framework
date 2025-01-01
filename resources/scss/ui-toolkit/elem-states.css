@@ -1,4 +1,4 @@
-.#{$namespace}-state {
+.awesome9-state {
 	&__controller {
 		@apply invisible fixed top-0 left-0;
 	}

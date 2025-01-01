@@ -1,4 +1,4 @@
-.#{$namespace}-card {
+.awesome9-card {
 	@apply relative rounded-md mb-4 transition-all duration-500;
 	@apply border border-solid border-primary bg-white;
 
@@ -35,7 +35,7 @@
 	}
 
 	&.with-sections {
-		.#{$namespace}-card {
+		.awesome9-card {
 			&__content {
 				@apply p-0;
 			}

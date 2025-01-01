@@ -1,20 +1,20 @@
-// Import 3rd party components
+/* Import 3rd party components */
 @import "ui-toolkit/prism";
 
-// Page
+/* Page */
 @import "ui-toolkit/page";
 @import "ui-toolkit/page-header";
 
-// Basic
+/* Basic */
 @import "ui-toolkit/heading";
 @import "ui-toolkit/paragraphs";
 
-// Global
+/* Global */
 @import "ui-toolkit/modifiers";
 @import "ui-toolkit/elem-states";
 @import "ui-toolkit/animations";
 
-// Components
+/* Components */
 @import "ui-toolkit/accordion";
 @import "ui-toolkit/alerts";
 @import "ui-toolkit/buttons";
@@ -26,5 +26,5 @@
 @import "ui-toolkit/tabs";
 @import "ui-toolkit/tooltips";
 
-// Setting page
+/* Setting page */
 @import "settings";

@@ -1,4 +1,4 @@
-.#{$namespace}-header-tabs {
+.awesome9-header-tabs {
 	@apply relative flex flex-row border-b border-primary -mx-5 pt-8 pl-4;
 
 	a {
@@ -19,13 +19,12 @@
 		}
 
 		&.is-active {
-			// border-bottom: 1px solid;
 			@apply border-b border-b-gray-100;
 			margin-bottom: -1px;
 		}
 	}
 
-	+ .#{$namespace}-tab-content {
+	+ .awesome9-tab-content {
 		@apply -mx-5 py-6 px-5;
 	}
 }

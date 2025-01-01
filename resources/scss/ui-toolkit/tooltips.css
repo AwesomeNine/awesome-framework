@@ -1,4 +1,4 @@
-.#{$namespace}-tooltip {
+.awesome9-tooltip {
 	@apply relative inline-block;
 
 	&__controller {
