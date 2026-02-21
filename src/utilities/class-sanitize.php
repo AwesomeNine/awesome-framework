@@ -9,8 +9,6 @@
 
 namespace Awesome9\Framework\Utilities;
 
-use ArrayAccess;
-
 defined( 'ABSPATH' ) || exit;
 
 /**

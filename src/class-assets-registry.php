@@ -9,16 +9,13 @@
 
 namespace Awesome9\Framework;
 
-use Awesome9\Framework\Interfaces\Integration_Interface;
 use Awesome9\Framework\Utilities\Str;
+use Awesome9\Framework\Interfaces\Integration_Interface;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Assets Registry.
- *
- * This class abstracts the process of registering, enqueuing, dequeuing, deregistering, and inline scripting or styling
- * for assets like CSS and JavaScript.
  *
  * Script functions:
  *
@@ -28,7 +25,6 @@ defined( 'ABSPATH' ) || exit;
  * @method bool register_script(string $handle, string|false $src, string[] $deps = [], string|bool|null $ver = false, array|bool $args = [])
  * @method bool inline_script(string $handle, string $data, string $position = 'after')
  * @method bool is_script(string $handle, string $status = 'enqueued')
- * @method bool localize_script(string $handle, string $object_name, array $l10n)
  *
  * Style functions:
  *
@@ -44,34 +40,34 @@ abstract class Assets_Registry implements Integration_Interface {
 	/**
 	 * Base URL for plugin local assets.
 	 *
-	 * @return string Base URL for assets.
+	 * @return string
 	 */
 	abstract public function get_base_url(): string;
 
 	/**
 	 * Prefix to use in handle to make it unique.
 	 *
-	 * @return string Prefic for assets.
+	 * @return string
 	 */
 	abstract public function get_prefix(): string;
 
 	/**
 	 * Version for plugin local assets.
 	 *
-	 * @return string Version of the assets.
+	 * @return string
 	 */
 	abstract public function get_version(): string;
 
 	/**
-	 * Magic method for handling dynamic asset operations like enqueue, dequeue, register, and inline.
+	 * Magic method to catch all calls to.
 	 *
 	 * @param string $name      The name of the method.
 	 * @param array  $arguments The arguments passed to the method.
 	 *
-	 * @return mixed The result of the action or null if the function does not exist.
+	 * @return mixed
 	 */
 	public function __call( $name, $arguments ) {
-		if ( preg_match( '/^(enqueue|dequeue|register|deregister|is|inline|localize)_(script|style)$/', $name, $matches ) ) {
+		if ( preg_match( '/^(enqueue|dequeue|register|deregister|is|inline)_(script|style)$/', $name, $matches ) ) {
 			$action    = $matches[1];
 			$type      = $matches[2];
 			$handle    = $this->prefix_it( $arguments[0] );
@@ -80,11 +76,30 @@ abstract class Assets_Registry implements Integration_Interface {
 
 			switch ( $action ) {
 				case 'register':
-					$func_args[] = $this->resolve_url( $arguments[1] );
-					$func_args[] = isset( $arguments[2] ) && is_array( $arguments[2] ) && ! empty( $arguments[2] )
-						? array_map( [ $this, 'prefix_dep' ], $arguments[2] ) : [];
-					$func_args[] = isset( $arguments[3] ) && ! empty( $arguments[3] ) ? $arguments[3] : $this->get_version();
-					$func_args[] = $arguments[4] ?? ( 'script' === $type ? true : 'all' );
+					$src  = $arguments[1] ?? false;
+					$deps = $arguments[2] ?? [];
+					$ver  = $arguments[3] ?? null;
+					$args = $arguments[4] ?? ( 'script' === $type ? true : 'all' );
+
+					// Explicit asset intent flag.
+					$use_asset = is_array( $args ) && ! empty( $args['@asset'] );
+
+					if ( 'script' === $type && $use_asset && $src ) {
+						$asset = $this->load_asset_metadata( $src );
+						$deps  = array_merge( $deps, $asset['dependencies'] );
+
+						if ( empty( $ver ) ) {
+							$ver = $asset['version'] ?: $this->get_version();
+						}
+
+						unset( $args['@asset'] );
+					}
+
+					$func_args[] = $this->resolve_url( $src );
+					$func_args[] =array_map( [ $this, 'prefix_dep' ], $deps );
+					$func_args[] = $ver;
+					$func_args[] = $args;
+
 					break;
 				case 'is':
 					$func_args[] = $arguments[1] ?? 'enqueued';
@@ -95,17 +110,8 @@ abstract class Assets_Registry implements Integration_Interface {
 						$func_args[] = $arguments[2] ?? 'after';
 					}
 					break;
-				case 'localize':
-					$func_args[] = $arguments[1] ?? 'unknown';
-					$func_args[] = $arguments[2] ?? [];
-					break;
 				default:
 					break;
-			}
-
-			if ( ! function_exists( $func ) ) {
-				trigger_error( "Function $func does not exist.", E_USER_WARNING ); // phpcs:ignore
-				return null;
 			}
 
 			return call_user_func_array( $func, $func_args );
@@ -118,41 +124,12 @@ abstract class Assets_Registry implements Integration_Interface {
 	 * @return void
 	 */
 	public function hooks(): void {
-		add_action( 'admin_head', [ $this, 'enqueue_colors' ], 0 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ], 0 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ], 0 );
 	}
 
 	/**
-	 * Enqueue colors for the admin area.
-	 *
-	 * @return void
-	 */
-	public function enqueue_colors(): void {
-		static $awesome_colors = false;
-		// Early bail!!
-		if ( $awesome_colors ) {
-			return;
-		}
-		$awesome_colors = true;
-		?>
-		<style>
-			:root {
-				--awesome-color-primary: 110, 68, 255;
-				--awesome-color-primary-hover: 148, 122, 241;
-				--awesome-color-secondary: 65, 69, 79;
-				--awesome-color-info: 96, 165, 250;
-				--awesome-color-success: 16, 185, 129;
-				--awesome-color-warning: 250, 204, 21;
-				--awesome-color-danger: 244, 67, 55;
-				--awesome-border-color: 205, 207, 213;
-			}
-		</style>
-		<?php
-	}
-
-	/**
-	 * Register assets for both scripts and styles.
+	 * Register assets
 	 *
 	 * @return void
 	 */
@@ -162,41 +139,67 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Prefix the handle to ensure asset uniqueness.
+	 * Prefix the handle
 	 *
 	 * @param string $handle Name of the asset.
 	 *
-	 * @return string Prefixed handle.
+	 * @return string
 	 */
 	public function prefix_it( $handle ): string {
 		return $this->get_prefix() . '-' . $handle;
 	}
 
 	/**
-	 * Register styles.
+	 * Register styles
 	 *
 	 * @return void
 	 */
 	public function register_styles(): void {}
 
 	/**
-	 * Register scripts.
+	 * Register scripts
 	 *
 	 * @return void
 	 */
 	public function register_scripts(): void {}
 
 	/**
-	 * Resolves the URL for an asset.
+	 * Load asset metadata generated by @wordpress/scripts.
 	 *
-	 * If the provided URL is an absolute URL or protocol-relative, it is returned as-is.
+	 * @param string $relative_path Relative JS path (e.g. build/index.js).
+	 *
+	 * @return array{dependencies: array, version: string|null}
+	 */
+	protected function load_asset_metadata( string $relative_path ): array {
+		$asset_path = preg_replace( '/\.js$/', '.asset.php', $relative_path );
+		$full_path  = wp_normalize_path( $this->get_base_path() . $asset_path );
+
+		if ( file_exists( $full_path ) ) {
+			$asset = include $full_path;
+
+			return [
+				'dependencies' => $asset['dependencies'] ?? [],
+				'version'      => $asset['version'] ?? null,
+			];
+		}
+
+		return [
+			'dependencies' => [],
+			'version'      => null,
+		];
+	}
+
+	/**
+	 * Resolves the URL.
+	 *
+	 * If the provided URL is an absolute URL or protocol-relative URL, it is returned as is.
 	 * Otherwise, the base URL is prepended to the relative path.
 	 *
-	 * @param string $src The asset source URL.
+	 * @param string $src The source URL.
 	 *
 	 * @return string The resolved URL.
 	 */
-	private function resolve_url( string $src ): string {
+	private function resolve_url( $src ): string {
 		if ( preg_match( '/^(https?:)?\/\//', $src ) ) {
 			return $src;
 		}
@@ -205,11 +208,11 @@ abstract class Assets_Registry implements Integration_Interface {
 	}
 
 	/**
-	 * Resolves the WordPress function name for a specific asset action.
+	 * Resolves the function name.
 	 *
-	 * @param string $name The name of the action (e.g., register_script).
+	 * @param string $name The name of the function.
 	 *
-	 * @return string The corresponding WordPress function name.
+	 * @return string
 	 */
 	private function resolve_function( $name ): string {
 		$method_map = [

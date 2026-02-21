@@ -57,8 +57,11 @@ class Loader {
 		}
 
 		// phpcs:disable
-		trigger_error(
-			sprintf( 'Undefined property: %s in %s on line %d', $name, __FILE__, __LINE__ ),
+		$trace = debug_backtrace();
+		\trigger_error(
+			'Undefined property via __get(): ' . $name .
+			' in ' . $trace[0]['file'] .
+			' on line ' . $trace[0]['line'],
 			E_USER_NOTICE
 		);
 		// phpcs:enable
@@ -87,12 +90,12 @@ class Loader {
 	}
 
 	/**
-	 * Register a component (integration, initializer, or route).
+	 * Register as.
 	 *
-	 * @param string       $register_as The category to register under (e.g., 'integrations').
-	 * @param string|array $class_name  The class name or class with arguments.
-	 * @param string       $alias       An alias for the component.
-	 * @param array|null   $args        Arguments for the class constructor.
+	 * @param string $register_as Register the container as.
+	 * @param string $class_name  The class name of the registery to be loaded.
+	 * @param string $alias       The class alias.
+	 * @param array  $args        The constructor arguments.
 	 *
 	 * @return void
 	 */
@@ -102,18 +105,18 @@ class Loader {
 		}
 
 		if ( '' === $alias ) {
-			$alias = uniqid( $register_as . '_' );
+			$this->{$register_as}[] = $class_name;
+		} else {
+			$this->{$register_as}[ $alias ] = $class_name;
 		}
-
-		$this->{$register_as}[ $alias ] = $class_name;
 	}
 
 	/**
 	 * Register an integration.
 	 *
-	 * @param string     $integration Class name of the integration.
-	 * @param string     $alias       Alias for the integration.
-	 * @param array|null $args        Arguments for the constructor.
+	 * @param string $integration The class name of the integration to be loaded.
+	 * @param string $alias       The class alias.
+	 * @param array  $args        The constructor arguments.
 	 *
 	 * @return void
 	 */
@@ -124,9 +127,9 @@ class Loader {
 	/**
 	 * Register an initializer.
 	 *
-	 * @param string     $initializer Class name of the initializer.
-	 * @param string     $alias       Alias for the initializer.
-	 * @param array|null $args        Arguments for the constructor.
+	 * @param string $initializer The class name of the initializer to be loaded.
+	 * @param string $alias       The class alias.
+	 * @param array  $args        The constructor arguments.
 	 *
 	 * @return void
 	 */
@@ -137,9 +140,9 @@ class Loader {
 	/**
 	 * Register a route.
 	 *
-	 * @param string     $router Class name of the route.
-	 * @param string     $alias  Alias for the route.
-	 * @param array|null $args   Arguments for the constructor.
+	 * @param string $router The class name of the route to be loaded.
+	 * @param string $alias  The class alias.
+	 * @param array  $args   The constructor arguments.
 	 *
 	 * @return void
 	 */
@@ -148,7 +151,7 @@ class Loader {
 	}
 
 	/**
-	 * Load all registered initializers.
+	 * Loads all registered initializers if their conditionals are met.
 	 *
 	 * @return void
 	 */
@@ -159,7 +162,7 @@ class Loader {
 	}
 
 	/**
-	 * Loads all registered integrations.
+	 * Loads all registered integrations if their conditionals are met.
 	 *
 	 * @return void
 	 */
@@ -170,7 +173,7 @@ class Loader {
 	}
 
 	/**
-	 * Load all registered routes.
+	 * Loads all registered routes if their conditionals are met.
 	 *
 	 * @return void
 	 */
@@ -181,11 +184,11 @@ class Loader {
 	}
 
 	/**
-	 * Create and store a container for a class.
+	 * Create container if needed.
 	 *
-	 * @param string|array $data   Class data.
-	 * @param string       $method Method to execute.
-	 * @param string       $alias  Alias for the container.
+	 * @param string $data   Class data.
+	 * @param string $method Method to execute.
+	 * @param string $alias  Class alias.
 	 *
 	 * @return void
 	 */
@@ -198,18 +201,22 @@ class Loader {
 		}
 
 		$container = empty( $arguments ) ? new $class_name() : new $class_name( ...$arguments );
+		if ( null === $container ) {
+			return;
+		}
 
-		if ( null !== $container ) {
-			$container->$method();
+		$container->$method();
+
+		if ( is_string( $alias ) ) {
 			$this->containers[ $alias ] = $container;
 		}
 	}
 
 	/**
-	 * Define a constant if not already defined.
+	 * Define constant if not already set.
 	 *
-	 * @param string $name  Constant name.
-	 * @param mixed  $value Constant value.
+	 * @param string      $name  Constant name.
+	 * @param bool|string $value Constant value.
 	 *
 	 * @return void
 	 */

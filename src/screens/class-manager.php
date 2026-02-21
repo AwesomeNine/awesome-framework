@@ -40,7 +40,7 @@ abstract class Manager implements Integration_Interface {
 	public function hooks(): void {
 		add_action( 'admin_menu', [ $this, 'add_pages' ], 15 );
 		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'current_screen' ], 10, 0 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ], 10, 0 );
 		add_action( 'in_admin_header', [ $this, 'add_custom_header' ], 25 );
 	}
 
@@ -103,6 +103,8 @@ abstract class Manager implements Integration_Interface {
 	 */
 	public function add_body_class( string $classes ): string {
 		if ( $this->is_screen() ) {
+			// Ensure $classes is always a string due to 3rd party plugins interfering with the filter.
+			$classes  = is_string( $classes ) ? $classes : '';
 			$classes .= ' ' . $this->define_body_class();
 		}
 
@@ -114,7 +116,7 @@ abstract class Manager implements Integration_Interface {
 	 *
 	 * @return void
 	 */
-	public function current_screen(): void {
+	public function enqueue_scripts(): void {
 		if ( $this->is_screen() ) {
 			$screen = $this->get_current_screen();
 			$screen->enqueue_assets();
@@ -147,6 +149,24 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
+	 * Check if the current screen belongs to the plugin.
+	 *
+	 * @param string $screen_id Optional screen id to check against.
+	 *
+	 * @return bool
+	 */
+	public function is_screen( $screen_id = '' ): bool {
+		$wp_screen_id = get_current_screen()->id;
+
+		if ( '' !== $screen_id ) {
+			$hook = array_search( $screen_id, $this->screen_ids, true );
+			return false !== $hook && $hook === $wp_screen_id;
+		}
+
+		return isset( $this->screen_ids[ $wp_screen_id ] );
+	}
+
+	/**
 	 * Register a new screen.
 	 *
 	 * @param string $screen Fully qualified class name of the screen.
@@ -160,18 +180,59 @@ abstract class Manager implements Integration_Interface {
 	}
 
 	/**
+	 * Get a screen by its id
+	 *
+	 * @param string $id Screen id.
+	 *
+	 * @return Screen|null
+	 */
+	public function get_screen( string $id ) {
+		$screens = $this->get_screens();
+
+		return $screens[ $id ] ?? null;
+	}
+
+	/**
+	 * Retrieve the current screen instance.
+	 *
+	 * @return null|Screen The current screen instance or null if not applicable.
+	 */
+	public function get_current_screen() {
+		$screen_id = $this->screen_ids[ get_current_screen()->id ] ?? null;
+
+		return $screen_id ? $this->screens[ $screen_id ] : null;
+	}
+
+	/**
 	 * Retrieve all registered screens.
 	 *
 	 * @return array
 	 */
-	public function get_screens(): array {
+	private function get_screens(): array {
 		if ( ! empty( $this->screens ) ) {
 			return $this->screens;
 		}
 
 		$this->define_screens();
 
-		// Order screens using the order property.
+		/**
+		 * Let developers add their own screens.
+		 *
+		 * @param Manager $this The admin menu instance.
+		 */
+		do_action( $this->define_hook_prefix() . '-add-screens', $this );
+
+		$this->sort_screens();
+
+		return $this->screens;
+	}
+
+	/**
+	 * Sort screens by order.
+	 *
+	 * @return void
+	 */
+	private function sort_screens(): void {
 		uasort(
 			$this->screens,
 			static function ( $a, $b ) {
@@ -185,36 +246,5 @@ abstract class Manager implements Integration_Interface {
 				return ( $order_a < $order_b ) ? -1 : 1;
 			}
 		);
-
-		return $this->screens;
-	}
-
-	/**
-	 * Retrieve screen IDs mapped to hooks.
-	 *
-	 * @return array
-	 */
-	public function get_screen_ids(): array {
-		return $this->screen_ids;
-	}
-
-	/**
-	 * Check if the current screen belongs to the plugin.
-	 *
-	 * @return bool
-	 */
-	public function is_screen(): bool {
-		return array_key_exists( get_current_screen()->id, $this->get_screen_ids() );
-	}
-
-	/**
-	 * Retrieve the current screen instance.
-	 *
-	 * @return null|Screen The current screen instance or null if not applicable.
-	 */
-	public function get_current_screen() {
-		$screen_id = $this->get_screen_ids()[ get_current_screen()->id ] ?? null;
-
-		return $screen_id ? $this->screens[ $screen_id ] : null;
 	}
 }

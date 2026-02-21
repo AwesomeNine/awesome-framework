@@ -33,23 +33,7 @@ abstract class Screen {
 	 */
 	private array $tabs = [];
 
-	/**
-	 * Reference to the screen manager.
-	 *
-	 * @var Manager
-	 */
-	private $manager = null;
-
-	/**
-	 * Screen constructor.
-	 *
-	 * @param Manager $manager Instance of the Manager class.
-	 */
-	public function __construct( Manager $manager ) {
-		$this->manager = $manager;
-	}
-
-	/* Page Hook ------------------- */
+	/* Page Hook Api --------------- */
 
 	/**
 	 * Get the screen hook.
@@ -150,9 +134,21 @@ abstract class Screen {
 	 *
 	 * @return void
 	 */
-	public function get_tabs_menu( array $args = [] ): void {
-		Toolkit::tabs( $this->get_tabs(), $this->get_current_tab_id(), ...$args );
-	}
+	abstract public function get_tabs_menu( array $args = [] ): void;
+
+	/**
+	 * Before tab content.
+	 *
+	 * @return void
+	 */
+	public function before_tab_content(): void {}
+
+	/**
+	 * After tab content.
+	 *
+	 * @return void
+	 */
+	public function after_tab_content(): void {}
 
 	/**
 	 * Render the content of the current tab.
@@ -163,9 +159,21 @@ abstract class Screen {
 	 */
 	public function get_tab_content( array $args = [] ): void {
 		$active = $this->get_current_tab_id();
-		$tab    = $this->get_tabs()[ $active ];
+		$tab    = $this->tabs[ $active ] ?? null;
 
-		$this->manager->render_tab_content( $active, $tab, $args );
+		if ( ! $tab ) {
+			return;
+		}
+
+		$this->before_tab_content();
+
+		if ( isset( $tab['callback'] ) ) {
+			call_user_func( $tab['callback'] );
+		} elseif ( isset( $tab['filename'] ) ) {
+			include $tab['filename'];
+		}
+
+		$this->after_tab_content();
 	}
 
 	/* Header API ------------------- */
@@ -185,8 +193,6 @@ abstract class Screen {
 	 * @return array Parsed header arguments.
 	 */
 	public function get_header_args(): array {
-		$wp_screen = get_current_screen();
-
 		return wp_parse_args(
 			$this->define_header_args(),
 			[
@@ -194,7 +200,6 @@ abstract class Screen {
 				'breadcrumb_title' => get_admin_page_title(),
 				'breadcrumb'       => true,
 				'manual_url'       => '',
-				'screen'           => $wp_screen,
 			]
 		);
 	}
