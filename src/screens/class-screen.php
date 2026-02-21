@@ -128,15 +128,6 @@ abstract class Screen {
 	}
 
 	/**
-	 * Render the tabs menu.
-	 *
-	 * @param array $args Arguments for rendering the menu.
-	 *
-	 * @return void
-	 */
-	abstract public function get_tabs_menu( array $args = [] ): void;
-
-	/**
 	 * Before tab content.
 	 *
 	 * @return void
@@ -203,4 +194,11 @@ abstract class Screen {
 			]
 		);
 	}
+
+	/**
+	 * Add actions to the header
+	 *
+	 * @return void
+	 */
+	public function header_actions(): void {}
 }

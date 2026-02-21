@@ -31,6 +31,15 @@ class Conditional {
 	}
 
 	/**
+	 * Checks if the current request is a WP CLI request.
+	 *
+	 * @return bool
+	 */
+	public static function is_wp_cli(): bool {
+		return defined( 'WP_CLI' ) && WP_CLI;
+	}
+
+	/**
 	 * Checks if the current request is an AJAX request.
 	 * It can be a request to `admin-ajax.php` or to `ajax-handler.php`.
 	 *
@@ -39,7 +48,6 @@ class Conditional {
 	public static function doing_ajax(): bool {
 		return wp_doing_ajax() || 'XMLHttpRequest' === Params::server( 'HTTP_X_REQUESTED_WITH' );
 	}
-
 
 	/**
 	 * Determines whether the current request is an autosave

@@ -30,7 +30,7 @@ abstract class Manager implements Integration_Interface {
 	 *
 	 * @var array
 	 */
-	private $screen_ids = null;
+	public $screen_ids = null;
 
 	/**
 	 * Hook into WordPress.
@@ -68,17 +68,6 @@ abstract class Manager implements Integration_Interface {
 	 * @return string
 	 */
 	abstract protected function define_hook_prefix(): string;
-
-	/**
-	 * Render content for a specific tab.
-	 *
-	 * @param string $active Active tab.
-	 * @param array  $tab    Tab object.
-	 * @param array  $args   Arguments to be used in the template.
-	 *
-	 * @return void
-	 */
-	abstract public function render_tab_content( string $active, array $tab, array $args ): void;
 
 	/**
 	 * Add administration pages to the WordPress Dashboard menu.
@@ -120,7 +109,7 @@ abstract class Manager implements Integration_Interface {
 		if ( $this->is_screen() ) {
 			$screen = $this->get_current_screen();
 			$screen->enqueue_assets();
-			do_action( $this->define_hook_prefix() . '-screen-' . $screen->get_id(), $screen );
+			do_action( $this->define_hook_prefix() . '_screen_' . $screen->get_id(), $screen );
 		}
 	}
 
@@ -220,7 +209,7 @@ abstract class Manager implements Integration_Interface {
 		 *
 		 * @param Manager $this The admin menu instance.
 		 */
-		do_action( $this->define_hook_prefix() . '-add-screens', $this );
+		do_action( $this->define_hook_prefix() . '_add_screens', $this );
 
 		$this->sort_screens();
 
