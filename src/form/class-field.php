@@ -76,7 +76,7 @@ abstract class Field {
 		 * This filter allows to extend the class dynamically by add-ons
 		 * this would allow add-ons to dynamically hide/show only attributes belonging to them, practically not used now
 		 */
-		$class = apply_filters( 'advanced-ads-field-class', '', $this->get( 'id' ) );
+		$class = apply_filters( 'awesome-field-class', '', $this->get( 'id' ) );
 
 		$classnames = HTML::classnames(
 			'awesome9-field',
