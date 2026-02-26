@@ -33,7 +33,7 @@ class Field_Checkbox extends Field {
 		$count   = count( $this->get( 'options' ) );
 		$name    = $this->get( 'name' ) . ( 1 === $count ? '' : '[]' );
 
-		$wrap_class = HTML::classnames( 'awesome9-checkbox-list', $this->get( 'class' ) );
+		$wrap_class = HTML::classnames( 'awesome-checkbox-list', $this->get( 'class' ) );
 		echo '<div class=" ' . esc_attr( $wrap_class ) . '">';
 		foreach ( $this->get( 'options' ) as $item ) :
 			$option_id   = $this->get( 'id' ) . '-' . ( $counter++ );

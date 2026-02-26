@@ -31,7 +31,7 @@ class Field_Radio extends Field {
 
 		$counter = 1;
 
-		$wrap_class = HTML::classnames( 'awesome9-radio-list', $this->get( 'class' ) );
+		$wrap_class = HTML::classnames( '-radio-list', $this->get( 'class' ) );
 		echo '<div class=" ' . esc_attr( $wrap_class ) . '">';
 		foreach ( $this->get( 'options' ) as $data ) :
 			$option_id   = $this->get( 'id' ) . '-' . ( $counter++ );

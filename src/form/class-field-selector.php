@@ -23,12 +23,12 @@ class Field_Selector extends Field {
 	 */
 	public function render() {
 		?>
-		<div id="awesome9-frontend-element-<?php echo esc_attr( $this->get( 'placement_id' ) ); ?>">
-			<input type="text" class="awesome9-frontend-element" name="<?php echo esc_attr( $this->get( 'name' ) ); ?>" value="<?php echo esc_attr( $this->get( 'value' ) ); ?>" />
-			<button style="display:none; color: red;" type="button" class="awesome9-deactivate-frontend-picker button">
+		<div id="awesome-frontend-element-<?php echo esc_attr( $this->get( 'placement_id' ) ); ?>">
+			<input type="text" class="awesome-frontend-element" name="<?php echo esc_attr( $this->get( 'name' ) ); ?>" value="<?php echo esc_attr( $this->get( 'value' ) ); ?>" />
+			<button style="display:none; color: red;" type="button" class="awesome-deactivate-frontend-picker button">
 				stop selection
 			</button>
-			<button type="button" class="awesome9-activate-frontend-picker button" data-placementid="<?php echo esc_attr( $this->get( 'placement_id' ) ); ?>" data-action="edit-placement">
+			<button type="button" class="awesome-activate-frontend-picker button" data-placementid="<?php echo esc_attr( $this->get( 'placement_id' ) ); ?>" data-action="edit-placement">
 				select position
 			</button>
 		</div>

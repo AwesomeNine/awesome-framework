@@ -31,7 +31,7 @@ class Field_Image_Selector extends Field {
 
 		$counter = 1;
 
-		$wrap_class = HTML::classnames( 'awesome9-image-selector', $this->get( 'class' ) );
+		$wrap_class = HTML::classnames( 'awesome-image-selector', $this->get( 'class' ) );
 		echo '<div class=" ' . esc_attr( $wrap_class ) . '">';
 
 		foreach ( $this->get( 'options' ) as $data ) :
@@ -40,7 +40,7 @@ class Field_Image_Selector extends Field {
 			$description = $data['description'] ?? '';
 			$image       = $data['image'] ?? '';
 			$item_class  = HTML::classnames(
-				'awesome9-selector-item',
+				'awesome-selector-item',
 				$data['item_class'] ?? '',
 				$image ? 'has-image' : 'no-image'
 			);
@@ -62,20 +62,20 @@ class Field_Image_Selector extends Field {
 
 				<?php if ( ! empty( $image ) ) : ?>
 					<!-- tooltip meta (visible on hover/focus) -->
-					<div class="awesome9-tooltip-alt">
-						<span class="awesome9-tooltip-controller">
-							<img class="awesome9-selector-item-thumb" src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( $title ); ?>" />
+					<div class="awesome-tooltip-alt">
+						<span class="awesome-tooltip-controller">
+							<img class="awesome-selector-item-thumb" src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( $title ); ?>" />
 						</span>
-						<div class="awesome9-tooltip-content" role="tooltip">
-							<div class="awesome9-selector-item-title"><?php echo esc_html( $title ); ?></div>
-							<div class="awesome9-selector-item-description"><?php echo esc_html( $description ); ?></div>
+						<div class="awesome-tooltip-content" role="tooltip">
+							<div class="awesome-selector-item-title"><?php echo esc_html( $title ); ?></div>
+							<div class="awesome-selector-item-description"><?php echo esc_html( $description ); ?></div>
 						</div>
 					</div>
 				<?php else : ?>
 					<!-- inline meta (hidden when image exists) -->
-					<div class="awesome9-selector-item-meta">
-						<div class="awesome9-selector-item-title"><?php echo esc_html( $title ); ?></div>
-						<div class="awesome9-selector-item-description"><?php echo esc_html( $description ); ?></div>
+					<div class="awesome-selector-item-meta">
+						<div class="awesome-selector-item-title"><?php echo esc_html( $title ); ?></div>
+						<div class="awesome-selector-item-description"><?php echo esc_html( $description ); ?></div>
 					</div>
 				<?php endif; ?>
 			</label>

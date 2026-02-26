@@ -79,9 +79,9 @@ abstract class Field {
 		$class = apply_filters( 'awesome-field-class', '', $this->get( 'id' ) );
 
 		$classnames = HTML::classnames(
-			'awesome9-field',
-			'awesome9-field-' . $this->get( 'type' ),
-			'awesome9-field-' . $this->get( 'id' ),
+			'awesome-field',
+			'awesome-field-' . $this->get( 'type' ),
+			'awesome-field-' . $this->get( 'id' ),
 			$class,
 			$this->get( 'wrapper_class' )
 		);
@@ -98,8 +98,8 @@ abstract class Field {
 				if ( ! in_array( $this->get( 'type' ), [ 'checkbox', 'image_selector', 'radio', 'radio_button' ], true ) ) {
 					$label_attrs['for'] = $this->get( 'id' );
 				}
-			?>
-			<div class="awesome9-field-label">
+				?>
+			<div class="awesome-field-label">
 				<label <?php echo HTML::build_attributes( $label_attrs ); ?>>
 					<?php echo esc_html( $this->get( 'label' ) ); ?>
 				</label>
@@ -108,7 +108,7 @@ abstract class Field {
 
 			<?php
 			if ( $input_wrap ) {
-				echo '<div class="awesome9-field-input">';
+				echo '<div class="awesome-field-input">';
 				$this->input();
 				echo '</div>';
 			} else {
@@ -154,11 +154,11 @@ abstract class Field {
 		$this->render_callback( 'after_field' );
 
 		if ( $this->get( 'description' ) ) {
-			echo '<div class="awesome9-field-description">' . wp_kses_post( $this->get( 'description' ) ) . '</div>';
+			echo '<div class="awesome-field-description">' . wp_kses_post( $this->get( 'description' ) ) . '</div>';
 		}
 
 		if ( $this->get( 'error' ) ) {
-			echo '<div class="awesome9-field-error">' . wp_kses_post( $this->get( 'error' ) ) . '</div>';
+			echo '<div class="awesome-field-error">' . wp_kses_post( $this->get( 'error' ) ) . '</div>';
 		}
 
 		$this->render_callback( 'after' );
