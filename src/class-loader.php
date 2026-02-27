@@ -45,6 +45,13 @@ class Loader {
 	protected array $containers = [];
 
 	/**
+	 * Custom containers.
+	 *
+	 * @var array<int, mixed>
+	 */
+	protected array $customs = [];
+
+	/**
 	 * Magic getter for containers.
 	 *
 	 * @param string $name Name of property.
@@ -77,6 +84,11 @@ class Loader {
 	public function load(): void {
 		$this->load_initializers();
 
+		$custom_priorities = array_keys( $this->customs );
+		foreach ( $custom_priorities as $priority ) {
+			\add_action( 'init', [ $this, 'load_customs' ], $priority );
+		}
+
 		if ( ! \did_action( 'init' ) ) {
 			\add_action( 'init', [ $this, 'load_integrations' ] );
 		} else {
@@ -100,14 +112,27 @@ class Loader {
 	 * @return void
 	 */
 	private function register( string $register_as, $class_name, string $alias = '', $args = null ): void {
+		$target =& $this->{$register_as};
+
+		if ( ! empty( $args ) && isset( $args['priority'] ) ) {
+			$priority = $args['priority'];
+
+			if ( ! isset( $this->customs[ $priority ] ) ) {
+				$this->customs[ $priority ] = [];
+			}
+
+			unset( $args['priority'] );
+			$target =& $this->customs[ $priority ];
+		}
+
 		if ( ! empty( $args ) ) {
 			$class_name = [ $class_name, $args ];
 		}
 
 		if ( '' === $alias ) {
-			$this->{$register_as}[] = $class_name;
+			$target[] = $class_name;
 		} else {
-			$this->{$register_as}[ $alias ] = $class_name;
+			$target[ $alias ] = $class_name;
 		}
 	}
 
@@ -180,6 +205,22 @@ class Loader {
 	public function load_routes(): void {
 		foreach ( $this->routes as $alias => $class ) {
 			$this->create_container( $class, 'register_routes', $alias );
+		}
+	}
+
+	/**
+	 * Loads all registered customs if their conditionals are met.
+	 *
+	 * @return void
+	 */
+	public function load_customs(): void {
+		global $wp_filter;
+
+		$hook     = current_filter();
+		$priority = $wp_filter[ $hook ]->current_priority();
+
+		foreach ( $this->customs[ $priority ] as $alias => $class ) {
+			$this->create_container( $class, 'hooks', $alias );
 		}
 	}
 
