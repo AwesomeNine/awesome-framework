@@ -30,6 +30,28 @@ class Arr {
 	}
 
 	/**
+	 * Determine whether the given value is an empty array.
+	 *
+	 * @param mixed $value Value to check.
+	 *
+	 * @return bool
+	 */
+	public static function is_empty( $value ): bool {
+		return ! static::accessible( $value ) || [] === $value;
+	}
+
+	/**
+	 * Determine whether the given value is a non-empty array.
+	 *
+	 * @param mixed $value Value to check.
+	 *
+	 * @return bool
+	 */
+	public static function is_non_empty( $value ): bool {
+		return static::accessible( $value ) && [] !== $value;
+	}
+
+	/**
 	 * Add an element to an array using "dot" notation if it doesn't exist.
 	 *
 	 * @param array      $arr   Array to add to.
