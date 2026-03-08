@@ -22,6 +22,11 @@ class Field_Raw extends Field {
 	 * @return void
 	 */
 	public function render() {
+		$content = $this->get( 'content' );
+		if ( $content ) {
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
 		$callback = $this->get( 'callback' );
 		if ( is_callable( $callback ) ) {
 			$callback();
